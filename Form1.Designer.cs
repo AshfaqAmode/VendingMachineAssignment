@@ -62,14 +62,12 @@
             this.ingredientsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ingredientsTableAdapter = new VendingMachineAssignment.VendingMachineDataSetTableAdapters.IngredientsTableAdapter();
             this.vendingMachineDataSet1 = new VendingMachineAssignment.VendingMachineDataSet();
-            this.dt = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.vendingMachineDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vendingMachineDataSetBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.drinksBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.drinksBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ingredientsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vendingMachineDataSet1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dt)).BeginInit();
             this.SuspendLayout();
             // 
             // VendingMachineLabel
@@ -244,7 +242,7 @@
             // 
             // TeaStockTextBox
             // 
-            this.TeaStockTextBox.Location = new System.Drawing.Point(20, 384);
+            this.TeaStockTextBox.Location = new System.Drawing.Point(23, 384);
             this.TeaStockTextBox.Name = "TeaStockTextBox";
             this.TeaStockTextBox.ReadOnly = true;
             this.TeaStockTextBox.Size = new System.Drawing.Size(30, 20);
@@ -290,6 +288,7 @@
             this.RestockButton.TabIndex = 23;
             this.RestockButton.Text = "Restock";
             this.RestockButton.UseVisualStyleBackColor = true;
+            this.RestockButton.Click += new System.EventHandler(this.RestockButton_Click);
             // 
             // vendingMachineDataSet
             // 
@@ -329,21 +328,12 @@
             this.vendingMachineDataSet1.DataSetName = "VendingMachineDataSet";
             this.vendingMachineDataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
-            // dt
-            // 
-            this.dt.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dt.Location = new System.Drawing.Point(50, 455);
-            this.dt.Name = "dt";
-            this.dt.Size = new System.Drawing.Size(240, 150);
-            this.dt.TabIndex = 24;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.ClientSize = new System.Drawing.Size(422, 694);
-            this.Controls.Add(this.dt);
+            this.ClientSize = new System.Drawing.Size(422, 417);
             this.Controls.Add(this.RestockButton);
             this.Controls.Add(this.MilkStockTextBox);
             this.Controls.Add(this.ChocolateStockTextBox);
@@ -380,7 +370,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.drinksBindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ingredientsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.vendingMachineDataSet1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dt)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -421,7 +410,6 @@
         private System.Windows.Forms.BindingSource ingredientsBindingSource;
         private VendingMachineDataSetTableAdapters.IngredientsTableAdapter ingredientsTableAdapter;
         private VendingMachineDataSet vendingMachineDataSet1;
-        private System.Windows.Forms.DataGridView dt;
     }
 }
 

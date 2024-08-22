@@ -10,12 +10,13 @@ namespace VendingMachineAssignment
     public interface IDbConnection
     {
         SqlConnection GetConnection();
+        SqlConnection CloseConnection();
     }
 
 
     public class DbConnection : IDbConnection
     {
-        private readonly string _connectionString = @"Data Source=localhost;Initial Catalog=VendingMachine;Integrated Security=True;Trust Server Certificate=True";
+        private readonly string _connectionString = @"data source=Dayforce20ZptW6;initial catalog=VendingMachine;trusted_connection=true";
 
         public SqlConnection GetConnection()
         {
@@ -24,18 +25,14 @@ namespace VendingMachineAssignment
             return connection;
         }
 
-    }
-
-    public class DbQuery
-    {
-        public SqlCommand ExecuteQuery(string query, SqlConnection connection)
+        public SqlConnection CloseConnection()
         {
-            var command = new SqlCommand(query, connection);
-            command.ExecuteNonQuery();
-            return command;
+            var connection = new SqlConnection(_connectionString);
+            connection.Open();
+            connection.Close();
+            return connection;
         }
+
     }
-
-
 
 }

@@ -20,21 +20,28 @@ namespace VendingMachineAssignment
 
         }
 
-        public void showdata()
+        public void PopulateStock()
         {
-            IDbConnection conn = new DbConnection();
-            conn.GetConnection();
-            string query = "SELECT * FROM Drinks";
-            DbQuery LoadDrinks = new DbQuery();
-            LoadDrinks.ExecuteQuery(query, conn.GetConnection());
-            DataTable dt = new DataTable();
-            LoadDrinks.Fill(LoadDrinks.ExecuteQuery(query, conn.GetConnection()));
-            
+            IStockDisplay stockValue = new DisplayStock();
+            TeaStockTextBox.Text = $"{stockValue.ReturnStockAmount("Tea")}";
+            SugarStockTextBox.Text = $"{stockValue.ReturnStockAmount("Sugar")}";
+            MilkStockTextBox.Text = $"{stockValue.ReturnStockAmount("Milk")}";
+            ChocolateStockTextBox.Text = $"{stockValue.ReturnStockAmount("Chocolate")}";
+            CoffeeStockTextBox.Text = $"{stockValue.ReturnStockAmount("Coffee")}";
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            PopulateStock();
 
+
+        }
+
+        private void RestockButton_Click(object sender, EventArgs e)
+        {
+            Restock restock = new Restock();
+            restock.RestockAll();
+            PopulateStock();
         }
     }
 }
