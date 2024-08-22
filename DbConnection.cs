@@ -32,7 +32,6 @@ namespace VendingMachineAssignment
         {
             var command = new SqlCommand(query, connection);
             command.ExecuteNonQuery();
-            Console.WriteLine("git");
             return command;
         }
     }
