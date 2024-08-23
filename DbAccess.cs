@@ -13,6 +13,7 @@ namespace VendingMachineAssignment
         SqlConnection GetConnection();
         SqlConnection CloseConnection();
         int GetDrinkPrice(string a);
+        
     }
 
 
@@ -37,7 +38,7 @@ namespace VendingMachineAssignment
         }
 
         //returns drink price (int)
-        public int GetDrinkPrice(string query)
+        public int GetDrinkPrice(string drink)
         {
             IDbConnection conn = new DbAccess();
             int price;
@@ -45,7 +46,7 @@ namespace VendingMachineAssignment
             try
             {
                 conn.GetConnection(); // Ensure the connection is opened
-                using (SqlCommand cmd = new SqlCommand(query, conn.GetConnection()))
+                using (SqlCommand cmd = new SqlCommand($"SELECT DrinkPrice FROM Drinks WHERE DrinkName = '{drink}'", conn.GetConnection()))
                 {
                     // ExecuteScalar is used to fetch a single value from the database
                     object result = cmd.ExecuteScalar();
@@ -74,17 +75,6 @@ namespace VendingMachineAssignment
             }
 
         }
-
-        //returns drink price (int)
-        //public int GetDrinkPrice(string query)
-        //{
-        //    IDbConnection conn = new DbAccess();
-        //    conn.GetConnection();
-        //    SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-        //    cmd.ExecuteNonQuery();
-        //    conn.CloseConnection();
-        //    return cmd.ExecuteNonQuery();
-        //}
 
 
 

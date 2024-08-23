@@ -12,7 +12,7 @@ namespace VendingMachineAssignment
     {
 
         //removes one from the 
-        public void TakeDrink(string removeIngredients)
+        public void TakeDrinkIngredients(string removeIngredients)
         {
             IDbConnection conn = new DbAccess();
             conn.GetConnection();
@@ -20,15 +20,14 @@ namespace VendingMachineAssignment
             SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
             cmd.ExecuteNonQuery();
             conn.CloseConnection();
-
         }
         
-        //retrieves drink pric
+        //retrieves drink price
         public bool PurchaseDrink(string drink,ref int balance)
         {
             int drinkPrice;
             IDbConnection a = new DbAccess();
-            drinkPrice = a.GetDrinkPrice($"SELECT DrinkPrice FROM Drinks WHERE DrinkName = '{drink}'");
+            drinkPrice = a.GetDrinkPrice(drink);
 
             if (balance >= drinkPrice)
             {
@@ -42,6 +41,8 @@ namespace VendingMachineAssignment
 
 
         }
+
+
 
     }
 }

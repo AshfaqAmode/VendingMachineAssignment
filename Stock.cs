@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VendingMachineAssignment
 {
-    internal class Restock
+    internal class Stock
     {
 
         //adds 10 to all ingredients
@@ -19,6 +19,12 @@ namespace VendingMachineAssignment
             SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
             cmd.ExecuteNonQuery();
             conn.CloseConnection();
+        }
+
+        public void CheckStock()
+        {
+
+
         }
 
     }

@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace VendingMachineAssignment
 {
@@ -12,7 +13,7 @@ namespace VendingMachineAssignment
         int ReturnStockAmount(string a);
     }
 
-    internal class DisplayStock : IStockDisplay
+    internal class DisplayStock 
     {
 
         //returns stock amount of specified ingredient
@@ -34,10 +35,40 @@ namespace VendingMachineAssignment
             }
             else
             {
-                Console.WriteLine("did not read");
-
+                MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 conn.CloseConnection();
                 return 0;
+            }
+        }
+
+        public bool CheckStockAmount()
+        {
+            IDbConnection conn = new DbAccess();
+            conn.GetConnection();
+            string query = $"SELECT IngredientStock FROM Ingredients";
+            SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            if (rdr.Read())
+            {
+                
+                int data = rdr.GetInt32(0);
+                if (data <= 0)
+                {
+                    conn.CloseConnection();
+                    return false;
+                }
+                else
+                {
+                    conn.CloseConnection();
+                    return true;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                conn.CloseConnection();
+                return false;
             }
         }
     }

@@ -28,7 +28,7 @@ namespace VendingMachineAssignment
         //enters loaded data values from the db into stock boxes
         public void PopulateStock()
         {
-            IStockDisplay stockObj = new DisplayStock();
+            var stockObj = new DisplayStock();
 
             TeaStockTextBox.Text = $"{stockObj.ReturnStockAmount("Tea")}";
             SugarStockTextBox.Text = $"{stockObj.ReturnStockAmount("Sugar")}";
@@ -60,7 +60,7 @@ namespace VendingMachineAssignment
             {
                 DrinkButtons a = new DrinkButtons();
                 LogTextBox.AppendText($"> Adding Sugar..." + Environment.NewLine);
-                a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Sugar'");
+                a.TakeDrinkIngredients("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Sugar'");
                 PopulateStock();
                 await Task.Delay(2000);
             }
@@ -86,7 +86,7 @@ namespace VendingMachineAssignment
                             if (!(drinksAndIngredients[i, j] == ""))
                             {
                                 LogTextBox.AppendText($"> Adding {drinksAndIngredients[i, j]}..." + Environment.NewLine);
-                                a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = '{drinksAndIngredients[i, j]}'");
+                                a.TakeDrinkIngredients("IngredientStock = IngredientStock - 1 WHERE IngredientName = '{drinksAndIngredients[i, j]}'");
                                 PopulateStock();
                                 await Task.Delay(2000);
                             }
@@ -121,12 +121,14 @@ namespace VendingMachineAssignment
         private void Form1_Load(object sender, EventArgs e)
         {
             PopulateStock();
+            var sam = new DisplayStock();
+            sam.CheckStockAmount();
         }
 
         private async void RestockButton_Click(object sender, EventArgs e)
         {
             //Restock function from restock class called so 10 added to all item stock
-            Restock restockObj = new Restock();
+            Stock restockObj = new Stock();
             restockObj.RestockAll();
 
             //Stock boxes populated again with updated stock
