@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace VendingMachineAssignment
 {
@@ -21,14 +22,25 @@ namespace VendingMachineAssignment
             conn.CloseConnection();
 
         }
-
+        
         //retrieves drink pric
-        public void PurchaseDrink(string drink)
+        public bool PurchaseDrink(string drink,ref int balance)
         {
             int drinkPrice;
             IDbConnection a = new DbAccess();
-            int drinkprice = a.GetDrinkPrice($"SELECT DrinkPrice FROM Drinks WHERE DrinkName = '{drink}'");
-            
+            drinkPrice = a.GetDrinkPrice($"SELECT DrinkPrice FROM Drinks WHERE DrinkName = '{drink}'");
+
+
+            if (balance >= drinkPrice)
+            {
+                balance -= drinkPrice;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
 
         }
 

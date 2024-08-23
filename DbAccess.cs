@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,12 +40,51 @@ namespace VendingMachineAssignment
         public int GetDrinkPrice(string query)
         {
             IDbConnection conn = new DbAccess();
-            conn.GetConnection();
-            SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-            cmd.ExecuteNonQuery();
-            conn.CloseConnection();
-            return cmd.ExecuteNonQuery();
+            int price;
+
+            try
+            {
+                conn.GetConnection(); // Ensure the connection is opened
+                using (SqlCommand cmd = new SqlCommand(query, conn.GetConnection()))
+                {
+                    // ExecuteScalar is used to fetch a single value from the database
+                    object result = cmd.ExecuteScalar();
+
+                    // Check if result is not null and convert to int
+                    if (result != null && int.TryParse(result.ToString(), out price))
+                    {
+                        return price;
+                    }
+                    else
+                    {
+                        // Handle the case where the result is null or not a valid integer
+                        throw new Exception("Invalid result from query.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (e.g., log them or rethrow)
+                Console.WriteLine("Error: " + ex.Message);
+                throw; // Re-throw the exception after logging it
+            }
+            finally
+            {
+                conn.CloseConnection(); // Ensure the connection is closed
+            }
+
         }
+
+        //returns drink price (int)
+        //public int GetDrinkPrice(string query)
+        //{
+        //    IDbConnection conn = new DbAccess();
+        //    conn.GetConnection();
+        //    SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
+        //    cmd.ExecuteNonQuery();
+        //    conn.CloseConnection();
+        //    return cmd.ExecuteNonQuery();
+        //}
 
 
 
