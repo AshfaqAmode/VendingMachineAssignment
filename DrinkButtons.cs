@@ -27,7 +27,7 @@ namespace VendingMachineAssignment
         {
             int drinkPrice;
             IDbConnection a = new DbAccess();
-            int drinkprice = a.ExecuteBuyQuery($"SELECT DrinkPrice FROM Drinks WHERE DrinkName = '{drink}'");
+            int drinkprice = a.GetDrinkPrice($"SELECT DrinkPrice FROM Drinks WHERE DrinkName = '{drink}'");
             
 
         }

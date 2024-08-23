@@ -11,7 +11,7 @@ namespace VendingMachineAssignment
     {
         SqlConnection GetConnection();
         SqlConnection CloseConnection();
-        int ExecuteBuyQuery(string a);
+        int GetDrinkPrice(string a);
     }
 
 
@@ -36,7 +36,7 @@ namespace VendingMachineAssignment
         }
 
         //returns drink price (int)
-        public int ExecuteBuyQuery(string query)
+        public int GetDrinkPrice(string query)
         {
             IDbConnection conn = new DbAccess();
             conn.GetConnection();
@@ -45,6 +45,7 @@ namespace VendingMachineAssignment
             conn.CloseConnection();
             return cmd.ExecuteNonQuery();
         }
+
 
 
     }

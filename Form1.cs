@@ -46,27 +46,31 @@ namespace VendingMachineAssignment
             //Stock boxes populated again with updated stock
             PopulateStock();
 
-            //Restock button temp disabled (3sec) to simulate real restocking
-            RestockButton.Enabled = false;
+            //all buttons disabled for 3 sec while restocking
+            DisableAllControls(this);
             LogTextBox.Text = "> Restocking Items..." + Environment.NewLine;
             await Task.Delay(3000);
 
             LogTextBox.AppendText("> All items restocked!" + Environment.NewLine);
-            RestockButton.Enabled = true;
+            EnableAllControls(this);
         }
 
-        //private async void TempDisableAllButtons()
-        //{
-        //    foreach (Control control in this.Controls)
-        //    {
-        //        if (control is Button button)
-        //        {
-        //            button.Enabled = false;
-        //            await Task.Delay(2000);
-        //            button.Enabled = true;
-        //        }
-        //    }
-        //}
+
+        //functions to disable all controls while drink is being made or restocking 
+        private void DisableAllControls(Form form)
+        {
+            foreach (Control control in form.Controls)
+            {
+                control.Enabled = false;
+            }
+        }
+        private void EnableAllControls(Form form)
+        {
+            foreach (Control control in form.Controls)
+            {
+                control.Enabled = true;
+            }
+        }
 
 
         private async void Amount_KeyDown(object sender, KeyEventArgs e)
@@ -99,10 +103,9 @@ namespace VendingMachineAssignment
 
         private async void TeaButton_Click(object sender, EventArgs e)
         {
-            
+            DisableAllControls(this);
             DrinkButtons a = new DrinkButtons();
             
-            TeaButton.Enabled = false;
             LogTextBox.Text = "> Tea selected" + Environment.NewLine;
             await Task.Delay(500);
 
@@ -117,39 +120,101 @@ namespace VendingMachineAssignment
             await Task.Delay(2000);
 
             LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
-            TeaButton.Enabled = true;
+            EnableAllControls(this);
+            
         }
 
-        private void CappucinoButton_Click(object sender, EventArgs e)
+        private async void CappucinoButton_Click(object sender, EventArgs e)
         {
+            DisableAllControls(this);
             DrinkButtons a = new DrinkButtons();
+
+            LogTextBox.Text = "> Cappucino selected" + Environment.NewLine;
+            await Task.Delay(500);
+
+
+            LogTextBox.AppendText($"> Adding Milk..." + Environment.NewLine);
             a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Milk'");
+            PopulateStock();
+            await Task.Delay(2000);
+
+
+            LogTextBox.AppendText($"> Adding Coffee..." + Environment.NewLine);
             a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Coffee'");
             PopulateStock();
+            await Task.Delay(2000);
+
+            LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
+            EnableAllControls(this);
         }
 
-        private void MochaccinoButton_Click(object sender, EventArgs e)
+        private async void MochaccinoButton_Click(object sender, EventArgs e)
         {
+            DisableAllControls(this);
             DrinkButtons a = new DrinkButtons();
+
+            LogTextBox.Text = "> Mochaccino selected" + Environment.NewLine;
+            await Task.Delay(500);
+
+
+            LogTextBox.AppendText($"> Adding Milk..." + Environment.NewLine);
             a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Milk'");
+            PopulateStock();
+            await Task.Delay(2000);
+
+
+            LogTextBox.AppendText($"> Adding Coffee..." + Environment.NewLine);
             a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Coffee'");
+            PopulateStock();
+            await Task.Delay(2000);
+
+            LogTextBox.AppendText($"> Adding Chocolate..." + Environment.NewLine);
             a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Chocolate'");
             PopulateStock();
+            await Task.Delay(2000);
+
+            LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
+            EnableAllControls(this);
         }
 
-        private void HotChocolateButton_Click(object sender, EventArgs e)
+        private async void HotChocolateButton_Click(object sender, EventArgs e)
         {
+            DisableAllControls(this);
             DrinkButtons a = new DrinkButtons();
+
+            LogTextBox.Text = "> Hot Chocolate selected" + Environment.NewLine;
+            await Task.Delay(500);
+
+            LogTextBox.AppendText($"> Adding Milk..." + Environment.NewLine);
             a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Milk'");
+            PopulateStock();
+            await Task.Delay(2000);
+
+            LogTextBox.AppendText($"> Adding Chocolate..." + Environment.NewLine);
             a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Chocolate'");
             PopulateStock();
+            await Task.Delay(2000);
+
+            LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
+            EnableAllControls(this);
+
         }
 
-        private void MilkButton_Click(object sender, EventArgs e)
+        private async void MilkButton_Click(object sender, EventArgs e)
         {
+            DisableAllControls(this);
             DrinkButtons a = new DrinkButtons();
+
+            LogTextBox.Text = "> Milk selected" + Environment.NewLine;
+            await Task.Delay(500);
+
+            LogTextBox.AppendText($"> Adding Milk..." + Environment.NewLine);
             a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Milk'");
             PopulateStock();
+            await Task.Delay(2000);
+
+            LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
+            EnableAllControls(this);
         }
     }
 }
