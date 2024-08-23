@@ -14,7 +14,16 @@ namespace VendingMachineAssignment
 {
     public partial class Form1 : Form
     {
+        private int balance;
 
+        string[,] drinksAndIngredients = new string[,]
+        {
+            { "Tea", "Milk", "Tea", "" }, // Last column left empty for variable length
+            { "Cappuccino", "Milk", "Coffee", "" },
+            { "Mochaccino", "Milk", "Coffee", "Chocolate" },
+            { "Hot Chocolate", "Milk", "Chocolate", "" },
+            { "Milk", "Milk", "", "" }
+        };
 
         //enters loaded data values from the db into stock boxes
         public void PopulateStock()
@@ -43,6 +52,63 @@ namespace VendingMachineAssignment
                 control.Enabled = true;
             }
         }
+
+        //removes a sugar from the stock
+        private async void SugarChoice()
+        {
+            if (!(WithoutSugarCheckBox.Checked))
+            {
+                DrinkButtons a = new DrinkButtons();
+                LogTextBox.AppendText($"> Adding Sugar..." + Environment.NewLine);
+                a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Sugar'");
+                PopulateStock();
+                await Task.Delay(2000);
+            }
+        }
+
+        private async void DrinkSelected(string currentDrink)
+        {
+            DisableAllControls(this);
+            DrinkButtons a = new DrinkButtons();
+
+            if (a.PurchaseDrink($"{currentDrink}", ref balance))
+            {
+                LogTextBox.AppendText(Environment.NewLine + $"> {currentDrink} selected" + Environment.NewLine);
+                await Task.Delay(500);
+
+                for (int i = 0; i < drinksAndIngredients.GetLength(0); i++)
+                {
+                    string drink = drinksAndIngredients[i, 0];
+                    for (int j = 1; j < drinksAndIngredients.GetLength(1); j++)
+                    {
+                        if (drink == currentDrink)
+                        {
+                            if (!(drinksAndIngredients[i, j] == ""))
+                            {
+                                LogTextBox.AppendText($"> Adding {drinksAndIngredients[i, j]}..." + Environment.NewLine);
+                                a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = '{drinksAndIngredients[i, j]}'");
+                                PopulateStock();
+                                await Task.Delay(2000);
+                            }
+                        }
+                    }
+                }
+                SugarChoice();
+
+                LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
+                LogTextBox.AppendText(Environment.NewLine + $"> Remaining Balance: {balance}" + Environment.NewLine);
+                AmountTextBox.Text = $"{balance}";
+                EnableAllControls(this);
+            }
+            else
+            {
+                LogTextBox.AppendText($"> Insufficient balance. Add more money or make another choice{Environment.NewLine}");
+                AmountTextBox.Text = $"{balance}";
+                EnableAllControls(this);
+            }
+
+        }
+
 
 
         public Form1()
@@ -75,12 +141,9 @@ namespace VendingMachineAssignment
             EnableAllControls(this);
         }
 
-
-        private int balance;
-
         private async void Amount_KeyDown(object sender, KeyEventArgs e)
         {
-            
+
             if (e.KeyCode == Keys.Enter)
             {
                 // Process the input
@@ -101,160 +164,33 @@ namespace VendingMachineAssignment
                     LogTextBox.AppendText($"> Balance: {balance}" + Environment.NewLine);
                     EnableAllControls(this);
                 }
-                
+
             }
         }
 
-        private async void SugarChoice()
-                {
-                    if (!(WithoutSugarCheckBox.Checked))
-                    {
-                        DrinkButtons a = new DrinkButtons();
-                        LogTextBox.AppendText($"> Adding Sugar..." + Environment.NewLine);
-                        a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Sugar'");
-                        PopulateStock();
-                        await Task.Delay(2000);
-                    }
-                }
-
-        private async void TeaButton_Click(object sender, EventArgs e)
+        private void TeaButton_Click(object sender, EventArgs e)
         {
-            DisableAllControls(this);
-            DrinkButtons a = new DrinkButtons();
-
-            if (a.PurchaseDrink("Tea", ref balance))
-            {
-                LogTextBox.Text = "> Tea selected" + Environment.NewLine;
-                await Task.Delay(500);
-
-                LogTextBox.AppendText($"> Adding Tea..." + Environment.NewLine);
-                a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Tea'");
-                PopulateStock();
-                await Task.Delay(2000);
-
-                LogTextBox.AppendText($"> Adding Milk..." + Environment.NewLine);
-                a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Milk'");
-                PopulateStock();
-                await Task.Delay(2000);
-
-                SugarChoice();
-
-                LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
-                LogTextBox.AppendText($"> Remaining Balance: {balance}" + Environment.NewLine);
-                EnableAllControls(this);
-            }
-            else
-            {
-                LogTextBox.AppendText($"> Insufficient balance");
-                EnableAllControls(this);
-            }
-
-
-
-
+            DrinkSelected("Tea");
         }
 
-        private async void CappucinoButton_Click(object sender, EventArgs e)
+        private void CappucinoButton_Click(object sender, EventArgs e)
         {
-            DisableAllControls(this);
-            DrinkButtons a = new DrinkButtons();
-
-            LogTextBox.Text = "> Cappucino selected" + Environment.NewLine;
-            await Task.Delay(500);
-
-
-            LogTextBox.AppendText($"> Adding Milk..." + Environment.NewLine);
-            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Milk'");
-            PopulateStock();
-            await Task.Delay(2000);
-
-
-            LogTextBox.AppendText($"> Adding Coffee..." + Environment.NewLine);
-            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Coffee'");
-            PopulateStock();
-            await Task.Delay(2000);
-
-            SugarChoice();
-
-            LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
-            EnableAllControls(this);
+            DrinkSelected("Cappuccino");
         }
 
-        private async void MochaccinoButton_Click(object sender, EventArgs e)
+        private void MochaccinoButton_Click(object sender, EventArgs e)
         {
-            DisableAllControls(this);
-            DrinkButtons a = new DrinkButtons();
-
-            LogTextBox.Text = "> Mochaccino selected" + Environment.NewLine;
-            await Task.Delay(500);
-
-
-            LogTextBox.AppendText($"> Adding Milk..." + Environment.NewLine);
-            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Milk'");
-            PopulateStock();
-            await Task.Delay(2000);
-
-
-            LogTextBox.AppendText($"> Adding Coffee..." + Environment.NewLine);
-            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Coffee'");
-            PopulateStock();
-            await Task.Delay(2000);
-
-            LogTextBox.AppendText($"> Adding Chocolate..." + Environment.NewLine);
-            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Chocolate'");
-            PopulateStock();
-            await Task.Delay(2000);
-
-            SugarChoice();
-
-            LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
-            EnableAllControls(this);
+            DrinkSelected("Mochaccino");
         }
 
-        private async void HotChocolateButton_Click(object sender, EventArgs e)
+        private void HotChocolateButton_Click(object sender, EventArgs e)
         {
-            DisableAllControls(this);
-            DrinkButtons a = new DrinkButtons();
-
-            LogTextBox.Text = "> Hot Chocolate selected" + Environment.NewLine;
-            await Task.Delay(500);
-
-            LogTextBox.AppendText($"> Adding Milk..." + Environment.NewLine);
-            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Milk'");
-            PopulateStock();
-            await Task.Delay(2000);
-
-            LogTextBox.AppendText($"> Adding Chocolate..." + Environment.NewLine);
-            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Chocolate'");
-            PopulateStock();
-            await Task.Delay(2000);
-
-            SugarChoice();
-
-            LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
-            EnableAllControls(this);
-
+            DrinkSelected("Hot Chocolate");
         }
 
-        private async void MilkButton_Click(object sender, EventArgs e)
+        private void MilkButton_Click(object sender, EventArgs e)
         {
-            DisableAllControls(this);
-            DrinkButtons a = new DrinkButtons();
-
-            LogTextBox.Text = "> Milk selected" + Environment.NewLine;
-            await Task.Delay(500);
-
-            LogTextBox.AppendText($"> Adding Milk..." + Environment.NewLine);
-            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Milk'");
-            PopulateStock();
-            await Task.Delay(2000);
-
-            SugarChoice();
-
-            LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
-            EnableAllControls(this);
+            DrinkSelected("Milk");
         }
-
-        
     }
 }

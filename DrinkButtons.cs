@@ -30,7 +30,6 @@ namespace VendingMachineAssignment
             IDbConnection a = new DbAccess();
             drinkPrice = a.GetDrinkPrice($"SELECT DrinkPrice FROM Drinks WHERE DrinkName = '{drink}'");
 
-
             if (balance >= drinkPrice)
             {
                 balance -= drinkPrice;
