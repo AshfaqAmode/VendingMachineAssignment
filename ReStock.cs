@@ -9,9 +9,11 @@ namespace VendingMachineAssignment
 {
     internal class Restock
     {
+
+        //adds 10 to all ingredients
         public void RestockAll()
         {
-            IDbConnection conn = new DbConnection();
+            IDbConnection conn = new DbAccess();
             conn.GetConnection();
             string query = $"UPDATE Ingredients SET IngredientStock = IngredientStock + 10";
             SqlCommand cmd = new SqlCommand(query, conn.GetConnection());

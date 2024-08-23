@@ -32,13 +32,9 @@ namespace VendingMachineAssignment
             CoffeeStockTextBox.Text = $"{stockObj.ReturnStockAmount("Coffee")}";
         }
 
-
-
         private void Form1_Load(object sender, EventArgs e)
         {
             PopulateStock();
-
-
         }
 
         private async void RestockButton_Click(object sender, EventArgs e)
@@ -59,28 +55,101 @@ namespace VendingMachineAssignment
             RestockButton.Enabled = true;
         }
 
-        private void Amount_TextChanged(object sender, EventArgs e)
-        {
-            int balance;
-            if (int.TryParse(AmountTextBox.Text, out balance) && balance > 0 && (balance % 10 == 0) || (balance % 5 == 0))
-            { 
-                LogTextBox.Text = ($"{balance}"); 
-            
-            }
-        }
+        //private async void TempDisableAllButtons()
+        //{
+        //    foreach (Control control in this.Controls)
+        //    {
+        //        if (control is Button button)
+        //        {
+        //            button.Enabled = false;
+        //            await Task.Delay(2000);
+        //            button.Enabled = true;
+        //        }
+        //    }
+        //}
 
-        private void Amount_KeyDown(object sender, KeyEventArgs e)
+
+        private async void Amount_KeyDown(object sender, KeyEventArgs e)
         {
+            
             if (e.KeyCode == Keys.Enter)
             {
                 // Process the input
                 string input = AmountTextBox.Text;
-                MessageBox.Show("You entered: " + input);
 
-                // Optionally, clear the text box
-                AmountTextBox.Clear();
+                int balance;
+                if (!(int.TryParse(AmountTextBox.Text, out balance) && balance > 0 && balance < 1000))
+                {
+                    MessageBox.Show("We only accept Rs 1, 5, 10, 20 coins and Rs 25, 50, 100 notes\n\t\tMaximum Rs 1000", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    AmountTextBox.Clear();
+                }
+                else
+                {
+                    AmountTextBox.Clear();
+                    AmountTextBox.Enabled = false;
+                    LogTextBox.Text = "> Reading Amount..." + Environment.NewLine;
+                    await Task.Delay(2000);
+
+                    LogTextBox.AppendText($"> Balance: {balance}" + Environment.NewLine);
+                    AmountTextBox.Enabled = true;
+                }
+                
             }
         }
 
+        private async void TeaButton_Click(object sender, EventArgs e)
+        {
+            
+            DrinkButtons a = new DrinkButtons();
+            
+            TeaButton.Enabled = false;
+            LogTextBox.Text = "> Tea selected" + Environment.NewLine;
+            await Task.Delay(500);
+
+            LogTextBox.AppendText($"> Adding Tea..." + Environment.NewLine);
+            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Tea'");
+            PopulateStock();
+            await Task.Delay(2000);
+
+            LogTextBox.AppendText($"> Adding Milk..." + Environment.NewLine);
+            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Milk'");
+            PopulateStock();
+            await Task.Delay(2000);
+
+            LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
+            TeaButton.Enabled = true;
+        }
+
+        private void CappucinoButton_Click(object sender, EventArgs e)
+        {
+            DrinkButtons a = new DrinkButtons();
+            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Milk'");
+            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Coffee'");
+            PopulateStock();
+        }
+
+        private void MochaccinoButton_Click(object sender, EventArgs e)
+        {
+            DrinkButtons a = new DrinkButtons();
+            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Milk'");
+            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Coffee'");
+            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Chocolate'");
+            PopulateStock();
+        }
+
+        private void HotChocolateButton_Click(object sender, EventArgs e)
+        {
+            DrinkButtons a = new DrinkButtons();
+            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Milk'");
+            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Chocolate'");
+            PopulateStock();
+        }
+
+        private void MilkButton_Click(object sender, EventArgs e)
+        {
+            DrinkButtons a = new DrinkButtons();
+            a.TakeDrink("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Milk'");
+            PopulateStock();
+        }
     }
 }

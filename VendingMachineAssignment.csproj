@@ -46,7 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbConnection.cs" />
+    <Compile Include="DbAccess.cs" />
+    <Compile Include="DrinkButtons.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

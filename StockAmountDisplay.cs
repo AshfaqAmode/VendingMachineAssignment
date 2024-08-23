@@ -14,9 +14,11 @@ namespace VendingMachineAssignment
 
     internal class DisplayStock : IStockDisplay
     {
+
+        //returns stock amount of specified ingredient
         public int ReturnStockAmount(string a)
         {
-            IDbConnection conn = new DbConnection();
+            IDbConnection conn = new DbAccess();
             conn.GetConnection();
             string query = $"SELECT IngredientStock FROM Ingredients WHERE IngredientName = '{a}'";
 
@@ -40,6 +42,7 @@ namespace VendingMachineAssignment
         }
     }
 
+   //Previous implementation (inefficient) so changed to one function where ingredient name is passed as param
 
     //interface IStockDisplay
     //{

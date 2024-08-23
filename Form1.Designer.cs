@@ -98,7 +98,6 @@
             this.AmountTextBox.Name = "AmountTextBox";
             this.AmountTextBox.Size = new System.Drawing.Size(112, 26);
             this.AmountTextBox.TabIndex = 2;
-            this.AmountTextBox.TextChanged += new System.EventHandler(this.Amount_TextChanged);
             this.AmountTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Amount_KeyDown);
             // 
             // LogLabel
@@ -131,6 +130,7 @@
             this.TeaButton.TabIndex = 5;
             this.TeaButton.Text = "Tea";
             this.TeaButton.UseVisualStyleBackColor = true;
+            this.TeaButton.Click += new System.EventHandler(this.TeaButton_Click);
             // 
             // CappucinoButton
             // 
@@ -141,6 +141,7 @@
             this.CappucinoButton.TabIndex = 6;
             this.CappucinoButton.Text = "Cappucino";
             this.CappucinoButton.UseVisualStyleBackColor = true;
+            this.CappucinoButton.Click += new System.EventHandler(this.CappucinoButton_Click);
             // 
             // MochaccinoButton
             // 
@@ -151,6 +152,7 @@
             this.MochaccinoButton.TabIndex = 7;
             this.MochaccinoButton.Text = "Mochaccino";
             this.MochaccinoButton.UseVisualStyleBackColor = true;
+            this.MochaccinoButton.Click += new System.EventHandler(this.MochaccinoButton_Click);
             // 
             // HotChocolateButton
             // 
@@ -161,6 +163,7 @@
             this.HotChocolateButton.TabIndex = 8;
             this.HotChocolateButton.Text = "Hot Chocolate";
             this.HotChocolateButton.UseVisualStyleBackColor = true;
+            this.HotChocolateButton.Click += new System.EventHandler(this.HotChocolateButton_Click);
             // 
             // MilkButton
             // 
@@ -171,6 +174,7 @@
             this.MilkButton.TabIndex = 9;
             this.MilkButton.Text = "Milk";
             this.MilkButton.UseVisualStyleBackColor = true;
+            this.MilkButton.Click += new System.EventHandler(this.MilkButton_Click);
             // 
             // LogTextBox
             // 
