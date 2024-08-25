@@ -1,0 +1,72 @@
+use VendingMachine;
+
+select
+    'data source=' + @@servername +
+    ';initial catalog=' + db_name() +
+    case type_desc
+        when 'WINDOWS_LOGIN' 
+            then ';trusted_connection=true'
+        else
+            ';user id=' + suser_name() + ';password=<<YourPassword>>'
+    end
+    as ConnectionString
+from sys.server_principals
+where name = suser_name()
+
+CREATE TABLE Drinks
+(
+	DrinkName varchar(50) PRIMARY KEY NOT NULL,
+	DrinkPrice INT NOT NULL
+)
+
+CREATE TABLE Ingredients
+(
+	IngredientName varchar(50) PRIMARY KEY NOT NULL,
+	IngredientStock INT NOT NULL
+)
+
+INSERT INTO Drinks  (DrinkName, DrinkPrice)VALUES
+	('Tea', 10),
+	('Cappuccino', 15),
+	('Mochaccino', 20),
+	('Hot Chocolate', 25),
+	('Milk', 5);
+
+INSERT INTO Ingredients(IngredientName, IngredientStock)VALUES
+	('Milk', 10),
+	('Tea', 10),
+	('Coffee', 10),
+	('Chocolate', 10),
+	('Sugar', 10);
+
+SELECT * FROM Drinks; 
+SELECT * FROM Ingredients;
+SELECT * FROM DrinkIngredients; 
+
+UPDATE Ingredients SET IngredientStock = 0;
+
+DROP TABLE Ingredients;
+
+UPDATE Drinks SET DrinkPrice = 5 Where DrinkName = 'Tea'; 
+
+Alter table DrinkIngredients;
+DROP table DrinkIngredients;
+
+CREATE TABLE DrinkIngredients
+(
+    DrinkName VARCHAR(50) NOT NULL,
+    Ingredient1 VARCHAR(50) NOT NULL,
+    Ingredient2 VARCHAR(50),
+    Ingredient3 VARCHAR(50),
+    FOREIGN KEY (DrinkName) REFERENCES Drinks(DrinkName),
+    FOREIGN KEY (Ingredient1) REFERENCES Ingredients(IngredientName)
+);
+
+INSERT INTO DrinkIngredients(DrinkName, Ingredient1, Ingredient2, Ingredient3)VALUES
+	('Tea', 'Milk', 'Tea'),
+	('Cappuccino', 'Milk', 'Coffee'),
+	('Mochaccino', 'Milk', 'Coffee', 'Chocolate'),
+	('Hot Chocolate', 'Milk','Chocolate'),
+	('Milk', 'Milk');
+
+	SELECT DrinkPrice FROM Drinks WHERE DrinkName = 'Tea'
