@@ -153,6 +153,7 @@ namespace VendingMachineAssignment
 
                     LogTextBox.AppendText($"> Balance: {balance}" + Environment.NewLine);
                     ButtonControl.EnableAllControls(this);
+                    PopulateStock();
                 }
 
             }
