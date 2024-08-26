@@ -16,7 +16,7 @@ namespace VendingMachineAssignment
         {
             IDbConnection conn = new DbAccess();
             conn.GetConnection();
-            string query = $"UPDATE Ingredients SET {removeIngredients}";
+            string query = $"UPDATE Ingredients SET IngredientStock = IngredientStock - 1 WHERE IngredientName = '{removeIngredients}'";
             SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
             cmd.ExecuteNonQuery();
             conn.CloseConnection();

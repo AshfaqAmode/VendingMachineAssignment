@@ -38,21 +38,6 @@ namespace VendingMachineAssignment
             AmountTextBox.Text = $"{balance}";
         }
 
-        //functions to disable all controls while drink is being made or restocking 
-        //private void DisableAllControls(Form form)
-        //{
-        //    foreach (Control control in form.Controls)
-        //    {
-        //        control.Enabled = false;
-        //    }
-        //}
-        //private void EnableAllControls(Form form)
-        //{
-        //    foreach (Control control in form.Controls)
-        //    {
-        //        control.Enabled = true;
-        //    }
-        //}
 
         //removes a sugar from the stock
         private async void SugarChoice()
@@ -61,7 +46,7 @@ namespace VendingMachineAssignment
             {
                 DrinkButtons a = new DrinkButtons();
                 LogTextBox.AppendText($"> Adding Sugar..." + Environment.NewLine);
-                a.TakeDrinkIngredients("IngredientStock = IngredientStock - 1 WHERE IngredientName = 'Sugar'");
+                a.TakeDrinkIngredients("Sugar");
                 PopulateStock();
                 await Task.Delay(2000);
             }
@@ -87,7 +72,7 @@ namespace VendingMachineAssignment
                             if (!(drinksAndIngredients[i, j] == ""))
                             {
                                 LogTextBox.AppendText($"> Adding {drinksAndIngredients[i, j]}..." + Environment.NewLine);
-                                a.TakeDrinkIngredients("IngredientStock = IngredientStock - 1 WHERE IngredientName = '{drinksAndIngredients[i, j]}'");
+                                a.TakeDrinkIngredients($"{drinksAndIngredients[i, j]}");
                                 PopulateStock();
                                 await Task.Delay(2000);
                             }
