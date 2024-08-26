@@ -35,6 +35,7 @@ namespace VendingMachineAssignment
             MilkStockTextBox.Text = $"{stockObj.ReturnStockAmount("Milk")}";
             ChocolateStockTextBox.Text = $"{stockObj.ReturnStockAmount("Chocolate")}";
             CoffeeStockTextBox.Text = $"{stockObj.ReturnStockAmount("Coffee")}";
+            AmountTextBox.Text = $"{balance}";
         }
 
         //functions to disable all controls while drink is being made or restocking 
