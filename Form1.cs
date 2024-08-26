@@ -39,20 +39,20 @@ namespace VendingMachineAssignment
         }
 
         //functions to disable all controls while drink is being made or restocking 
-        private void DisableAllControls(Form form)
-        {
-            foreach (Control control in form.Controls)
-            {
-                control.Enabled = false;
-            }
-        }
-        private void EnableAllControls(Form form)
-        {
-            foreach (Control control in form.Controls)
-            {
-                control.Enabled = true;
-            }
-        }
+        //private void DisableAllControls(Form form)
+        //{
+        //    foreach (Control control in form.Controls)
+        //    {
+        //        control.Enabled = false;
+        //    }
+        //}
+        //private void EnableAllControls(Form form)
+        //{
+        //    foreach (Control control in form.Controls)
+        //    {
+        //        control.Enabled = true;
+        //    }
+        //}
 
         //removes a sugar from the stock
         private async void SugarChoice()
@@ -69,7 +69,7 @@ namespace VendingMachineAssignment
 
         private async void DrinkSelected(string currentDrink)
         {
-            DisableAllControls(this);
+            ButtonControl.DisableAllControls(this);
             DrinkButtons a = new DrinkButtons();
 
             if (a.PurchaseDrink($"{currentDrink}", ref balance))
@@ -99,13 +99,15 @@ namespace VendingMachineAssignment
                 LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
                 LogTextBox.AppendText(Environment.NewLine + $"> Remaining Balance: {balance}" + Environment.NewLine);
                 AmountTextBox.Text = $"{balance}";
-                EnableAllControls(this);
+                await Task.Delay(1000);
+                ButtonControl.EnableAllControls(this);
             }
             else
             {
                 LogTextBox.AppendText($"> Insufficient balance. Add more money or make another choice{Environment.NewLine}");
                 AmountTextBox.Text = $"{balance}";
-                EnableAllControls(this);
+                await Task.Delay(1000);
+                ButtonControl.EnableAllControls(this);
             }
 
         }
@@ -136,12 +138,12 @@ namespace VendingMachineAssignment
             PopulateStock();
 
             //all buttons disabled for 3 sec while restocking
-            DisableAllControls(this);
+            ButtonControl.DisableAllControls(this);
             LogTextBox.Text = "> Restocking Items..." + Environment.NewLine;
             await Task.Delay(3000);
 
             LogTextBox.AppendText("> All items restocked!" + Environment.NewLine);
-            EnableAllControls(this);
+            ButtonControl.EnableAllControls(this);
         }
 
         private async void Amount_KeyDown(object sender, KeyEventArgs e)
@@ -160,12 +162,12 @@ namespace VendingMachineAssignment
                 else
                 {
                     AmountTextBox.Clear();
-                    DisableAllControls(this);
+                    ButtonControl.DisableAllControls(this);
                     LogTextBox.Text = "> Reading Amount..." + Environment.NewLine;
                     await Task.Delay(2000);
 
                     LogTextBox.AppendText($"> Balance: {balance}" + Environment.NewLine);
-                    EnableAllControls(this);
+                    ButtonControl.EnableAllControls(this);
                 }
 
             }
