@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace VendingMachineAssignment
 {
@@ -13,7 +14,8 @@ namespace VendingMachineAssignment
         SqlConnection GetConnection();
         SqlConnection CloseConnection();
         int GetDrinkPrice(string a);
-        
+        int ReturnStockAmount(string a);
+
     }
 
 
@@ -76,7 +78,62 @@ namespace VendingMachineAssignment
 
         }
 
+        //return stock amount
+        public int ReturnStockAmount(string a)
+        {
+            IDbConnection conn = new DbAccess();
+            conn.GetConnection();
+            string query = $"SELECT IngredientStock FROM Ingredients WHERE IngredientName = '{a}'";
 
+            SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            if (rdr.Read())
+            {
+                int data = rdr.GetInt32(0);
+                conn.CloseConnection();
+                return data;
+
+            }
+            else
+            {
+                MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                conn.CloseConnection();
+                return 0;
+            }
+        }
+
+        //
+        public bool CheckStockAmount()
+        {
+            IDbConnection conn = new DbAccess();
+            conn.GetConnection();
+            string query = $"SELECT IngredientStock FROM Ingredients";
+            SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            if (rdr.Read())
+            {
+
+                int data = rdr.GetInt32(0);
+                if (data <= 0)
+                {
+                    conn.CloseConnection();
+                    return false;
+                }
+                else
+                {
+                    conn.CloseConnection();
+                    return true;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                conn.CloseConnection();
+                return false;
+            }
+        }
 
     }
 
