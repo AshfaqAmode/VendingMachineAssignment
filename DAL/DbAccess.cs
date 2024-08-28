@@ -13,9 +13,9 @@ namespace VendingMachineAssignment
     public interface IDbConnection
     {
         SqlConnection GetConnection();
-        SqlConnection CloseConnection();
+        void CloseConnection();
         void WriteDatabase(string query);
-        int ReadDatabase(string query);
+        int ReadDatabaseField(string query);
         int GetDrinkPrice(string a);
         int ReturnStockAmount(string a);
 
@@ -39,15 +39,30 @@ namespace VendingMachineAssignment
             }
             return connection;
         }
-        public SqlConnection CloseConnection()
+        public void CloseConnection()
         {
             var connection = new SqlConnection(Constant.connectionString);
             connection.Open();
             connection.Close();
-            return connection;
         }
-
-
+        /*
+        public void CloseConnection(SqlConnection connection)
+        {
+            if (connection != null && connection.State == System.Data.ConnectionState.Open)
+            {
+                try
+                {
+                    connection.Close();
+                    Console.WriteLine("Connection closed successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error closing connection: " + ex.Message);
+                }
+            }
+        }
+        */
+        
         //uses SqlCommand to update the database depending on parameter (query)
         public void WriteDatabase(string query)
         {
@@ -67,7 +82,7 @@ namespace VendingMachineAssignment
         }
 
         //Created ReadDatabase function
-        public int ReadDatabase(string query)
+        public int ReadDatabaseField(string query)
         {
             using (SqlConnection conn = GetConnection())
             {
@@ -87,62 +102,21 @@ namespace VendingMachineAssignment
         }
 
 
-        
-
-        /*
-        public void CloseConnection(SqlConnection connection)
-        {
-            if (connection != null && connection.State == System.Data.ConnectionState.Open)
-            {
-                try
-                {
-                    connection.Close();
-                    Console.WriteLine("Connection closed successfully.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error closing connection: " + ex.Message);
-                }
-            }
-        }
-        */
-
         //returns drink price (int)
         public int GetDrinkPrice(string drink)
         {
             IDbConnection conn = new DbAccess();
             int price;
-
-            try
-            {
-                conn.GetConnection(); // Ensure the connection is opened
-                using (SqlCommand cmd = new SqlCommand($"SELECT DrinkPrice FROM Drinks WHERE DrinkName = '{drink}'", conn.GetConnection()))
-                {
-                    // ExecuteScalar is used to fetch a single value from the database
-                    object result = cmd.ExecuteScalar();
-
-                    // Check if result is not null and convert to int
-                    if (result != null && int.TryParse(result.ToString(), out price))
-                    {
-                        return price;
-                    }
-                    else
-                    {
-                        // Handle the case where the result is null or not a valid integer
-                        throw new Exception("Invalid result from query.");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions (e.g., log them or rethrow)
-                Console.WriteLine("Error: " + ex.Message);
-                throw; // Re-throw the exception after logging it
-            }
-            finally
-            {
-                conn.CloseConnection(); // Ensure the connection is closed
-            }
+            price = conn.ReadDatabaseField($"SELECT DrinkPrice FROM Drinks WHERE DrinkName = '{drink}'");
+                            if (price > 0)
+                            {
+                                return price;
+                            }
+                            else
+                            {
+                                // Handle the case where the result is null or not a valid integer
+                                throw new Exception("Invalid result from query.");
+                            }
 
         }
 

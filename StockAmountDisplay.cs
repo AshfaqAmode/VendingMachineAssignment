@@ -45,14 +45,15 @@ namespace VendingMachineAssignment
         {
             IDbConnection conn = new DbAccess();
             int data;
-            data = conn.ReadDatabase($"SELECT IngredientStock FROM Ingredients");
+            data = conn.ReadDatabaseField($"SELECT IngredientStock FROM Ingredients");
             if ( data > 0)
             {
+                MessageBox.Show($"{data}");
                 return true;
             }
             else
             {
-                MessageBox.Show("One or more items need to be restocked!");
+                MessageBox.Show("One or more items need to be restocked!" + data);
                 return false;
             }
             //conn.GetConnection();
