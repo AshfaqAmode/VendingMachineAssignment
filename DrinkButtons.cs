@@ -15,11 +15,7 @@ namespace VendingMachineAssignment
         public void TakeDrinkIngredients(string removeIngredients)
         {
             IDbConnection conn = new DbAccess();
-            conn.GetConnection();
-            string query = $"UPDATE Ingredients SET IngredientStock = IngredientStock - 1 WHERE IngredientName = '{removeIngredients}'";
-            SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-            cmd.ExecuteNonQuery();
-            conn.CloseConnection();
+            conn.WriteDatabase($"UPDATE Ingredients SET IngredientStock = IngredientStock - 1 WHERE IngredientName = '{removeIngredients}'");
         }
         
         //retrieves drink price

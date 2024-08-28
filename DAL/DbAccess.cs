@@ -46,12 +46,13 @@ namespace VendingMachineAssignment
             return connection;
         }
 
+
+        //uses SqlCommand to update the database depending on parameter (query)
         public void WriteDatabase(string query)
         {
-            IDbConnection conn = new DbAccess();
-            using (conn.GetConnection())
+            using (SqlConnection conn = GetConnection())
             {
-                SqlCommand a = new SqlCommand(query, conn.GetConnection());
+                SqlCommand a = new SqlCommand(query, conn);
                 try
                 {
                     a.ExecuteNonQuery();

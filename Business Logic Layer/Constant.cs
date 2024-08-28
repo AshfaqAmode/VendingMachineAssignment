@@ -8,6 +8,7 @@ namespace VendingMachineAssignment.Business_Logic_Layer
 {
     public class Constant
     {
+
         public const string connectionString = @"data source=Dayforce20ZptW6;initial catalog=VendingMachine;trusted_connection=true";
     }
 }

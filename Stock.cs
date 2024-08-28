@@ -14,10 +14,7 @@ namespace VendingMachineAssignment
         public void RestockAll()
         {
             IDbConnection conn = new DbAccess();
-            conn.GetConnection();
-            string query = $"UPDATE Ingredients SET IngredientStock = IngredientStock + 10";
-            SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-            cmd.ExecuteNonQuery();
+            conn.WriteDatabase("UPDATE Ingredients SET IngredientStock = IngredientStock + 10");
             conn.CloseConnection();
         }
 
