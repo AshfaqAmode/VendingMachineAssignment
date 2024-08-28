@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,11 +20,21 @@ namespace VendingMachineAssignment
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
             IDbConnection conn = new DbAccess();
-            List<Drinks> a = conn.GetDrinksList("SELECT * FROM Drinks");
-            foreach (var drink in a)
+            //List<Drinks> a = conn.GetDrinksList("SELECT * FROM Drinks");
+            //foreach (var drink in a)
+            //{
+            //    MessageBox.Show($"{drink.DrinkName}, {drink.DrinkId}, {drink.DrinkPrice}");
+            //}
+            DataTable Table = conn.ReadDatabaseRow("SELECT * FROM Ingredients WHERE IngredientId = 1");
+
+            foreach (DataRow dataRow in Table.Rows)
             {
-                MessageBox.Show($"{drink.DrinkName}, {drink.DrinkId}, {drink.DrinkPrice}");
+                foreach (var item in dataRow.ItemArray)
+                {
+                    Console.WriteLine(item);
+                }
             }
+
         }
     }
 }

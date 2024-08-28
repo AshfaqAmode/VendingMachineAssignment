@@ -18,7 +18,7 @@ namespace VendingMachineAssignment
         void CloseConnection();
         void WriteDatabase(string query);
         int ReadDatabaseField(string query);
-        DataSet ReadDatabaseColumn(string query);
+        DataTable ReadDatabaseRow(string query);
         List<Ingredients> GetIngredientsList(string query);
         List<Drinks> GetDrinksList(string _selectDrinks);
         int GetDrinkPrice(string a);
@@ -107,9 +107,9 @@ namespace VendingMachineAssignment
             }
         }
 
-        public DataSet ReadDatabaseColumn(string query)
+        public DataTable ReadDatabaseRow(string query)
         {
-            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
             SqlDataAdapter adapter = new SqlDataAdapter();
 
             using (SqlConnection conn = GetConnection())
@@ -117,13 +117,13 @@ namespace VendingMachineAssignment
                 adapter.SelectCommand = new SqlCommand(query, conn);
                 try
                 {
-                    adapter.Fill(ds);
-                    return ds;
+                    adapter.Fill(dt);
+                    return dt;
                 }
                 catch (Exception e)
                 {
                     MessageBox.Show("Error writing to database: " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return ds;
+                    return dt;
                 }
             }
         }
@@ -148,6 +148,11 @@ namespace VendingMachineAssignment
                 ingredients.Add(ingredient);
             }
             return ingredients;
+        }
+
+        public void UpdateIngredientsList(List<Ingredients> ingredients)
+        {
+
         }
 
         public List<Drinks> GetDrinksList(string _selectDrinks)
