@@ -14,6 +14,7 @@ namespace VendingMachineAssignment
     {
         SqlConnection GetConnection();
         SqlConnection CloseConnection();
+        void WriteDatabase(string query);
         int GetDrinkPrice(string a);
         int ReturnStockAmount(string a);
 
@@ -22,7 +23,7 @@ namespace VendingMachineAssignment
 
     public class DbAccess : IDbConnection
     {
-        //DB open and close within a function
+        //DB open and close with exception ahndling
         public SqlConnection GetConnection()
         {
             SqlConnection connection = new SqlConnection(Constant.connectionString);
@@ -44,6 +45,25 @@ namespace VendingMachineAssignment
             connection.Close();
             return connection;
         }
+
+        public void WriteDatabase(string query)
+        {
+            IDbConnection conn = new DbAccess();
+            using (conn.GetConnection())
+            {
+                SqlCommand a = new SqlCommand(query, conn.GetConnection());
+                try
+                {
+                    a.ExecuteNonQuery();
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show("Error writing to database: " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+            }
+        }
+
 
         
 
