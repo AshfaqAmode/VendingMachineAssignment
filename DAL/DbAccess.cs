@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using VendingMachineAssignment.Business_Logic_Layer;
 
 namespace VendingMachineAssignment
 {
@@ -21,23 +22,46 @@ namespace VendingMachineAssignment
 
     public class DbAccess : IDbConnection
     {
-        //private readonly so conn string cant be changed and it cant be accessed outside the class and file 
-        private readonly string _connectionString = @"data source=Dayforce20ZptW6;initial catalog=VendingMachine;trusted_connection=true";
-
         //DB open and close within a function
         public SqlConnection GetConnection()
         {
-            var connection = new SqlConnection(_connectionString);
-            connection.Open();
+            SqlConnection connection = new SqlConnection(Constant.connectionString);
+            try
+            {
+                connection.Open();
+                Console.WriteLine("Connection opened successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error opening connection: " + ex.Message);
+            }
             return connection;
         }
         public SqlConnection CloseConnection()
         {
-            var connection = new SqlConnection(_connectionString);
+            var connection = new SqlConnection(Constant.connectionString);
             connection.Open();
             connection.Close();
             return connection;
         }
+
+        /*
+        public void CloseConnection(SqlConnection connection)
+        {
+            if (connection != null && connection.State == System.Data.ConnectionState.Open)
+            {
+                try
+                {
+                    connection.Close();
+                    Console.WriteLine("Connection closed successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error closing connection: " + ex.Message);
+                }
+            }
+        }
+        */
 
         //returns drink price (int)
         public int GetDrinkPrice(string drink)
