@@ -132,14 +132,14 @@ namespace VendingMachineAssignment
             IDbConnection conn = new DbAccess();
 
             SqlCommand a = new SqlCommand(query, conn.GetConnection());
-            SqlDataReader dr = a.ExecuteReader(); // Fill in what is needed, can't remember offhand
+            SqlDataReader dr = a.ExecuteReader();
 
             while (dr.Read())
             {
                 Ingredients ingredient = new Ingredients(
                    dr.GetInt32(dr.GetOrdinal("IngredientId")), // Get IngredientId as int
                    dr.GetString(dr.GetOrdinal("IngredientName")), // Get IngredientName as string
-                   dr.GetString(dr.GetOrdinal("IngredientStock")) // Get IngredientStock as string
+                   dr.GetInt32(dr.GetOrdinal("IngredientStock")) // Get IngredientStock as string
                  );
 
                 // Add the Ingredients object to the list

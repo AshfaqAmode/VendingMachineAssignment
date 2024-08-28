@@ -12,9 +12,9 @@ namespace VendingMachineAssignment.Business_Logic_Layer
     {
         private int _ingredientId;
         private string _ingredientName;
-        private string _ingredientStock;
+        private int _ingredientStock;
 
-        public Ingredients(int ingredientId, string ingredientName, string ingredientStock)
+        public Ingredients(int ingredientId, string ingredientName, int ingredientStock)
         {
             IngredientId = ingredientId;
             IngredientName = ingredientName;
@@ -23,7 +23,7 @@ namespace VendingMachineAssignment.Business_Logic_Layer
 
         public int IngredientId { get => _ingredientId; set => _ingredientId = value; }
         public string IngredientName { get => _ingredientName; set => _ingredientName = value; }
-        public string IngredientStock { get => _ingredientStock; set => _ingredientStock = value; }
+        public int IngredientStock { get => _ingredientStock; set => _ingredientStock = value; }
 
         //public  List<Ingredients> CreateIngredientList(string query)
         //{
