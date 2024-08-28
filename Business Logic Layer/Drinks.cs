@@ -16,11 +16,11 @@ namespace VendingMachineAssignment.Business_Logic_Layer
         {
             DrinkId = drinkId;
             DrinkName = drinkName;
-            DrinkStock = drinkPrice;
+            DrinkPrice = drinkPrice;
         }
 
         public int DrinkId { get => _drinkId; set => _drinkId = value; }
         public string DrinkName { get => _drinkName; set => _drinkName = value; }
-        public int DrinkStock { get => _drinkPrice; set => _drinkPrice = value; }
+        public int DrinkPrice { get => _drinkPrice; set => _drinkPrice = value; }
     }
 }

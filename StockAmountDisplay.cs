@@ -56,32 +56,6 @@ namespace VendingMachineAssignment
                 MessageBox.Show("One or more items need to be restocked!" + data);
                 return false;
             }
-            //conn.GetConnection();
-            //string query = $"SELECT IngredientStock FROM Ingredients";
-            //SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-            //SqlDataReader rdr = cmd.ExecuteReader();
-
-            //if (rdr.Read())
-            //{
-
-            //    int data = rdr.GetInt32(0);
-            //    if (data <= 0)
-            //    {
-            //        conn.CloseConnection();
-            //        return false;
-            //    }
-            //    else
-            //    {
-            //        conn.CloseConnection();
-            //        return true;
-            //    }
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    conn.CloseConnection();
-            //    return false;
-            //}
         }
     }
 

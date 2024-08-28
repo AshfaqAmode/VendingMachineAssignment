@@ -58,7 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business Logic Layer\Constant.cs" />
+    <Compile Include="Constant.cs" />
     <Compile Include="Business Logic Layer\Drinks.cs" />
     <Compile Include="Business Logic Layer\Ingredients.cs" />
     <Compile Include="DAL\DbAccess.cs" />

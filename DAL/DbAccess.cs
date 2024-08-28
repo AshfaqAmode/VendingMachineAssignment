@@ -19,9 +19,11 @@ namespace VendingMachineAssignment
         void WriteDatabase(string query);
         int ReadDatabaseField(string query);
         DataSet ReadDatabaseColumn(string query);
-        List<Ingredients> CreateIngredientList(string query);
+        List<Ingredients> GetIngredientsList(string query);
+        List<Drinks> GetDrinksList(string _selectDrinks);
         int GetDrinkPrice(string a);
         int ReturnStockAmount(string a);
+        int CheckStockAmount();
 
     }
 
@@ -126,7 +128,7 @@ namespace VendingMachineAssignment
             }
         }
 
-        public List<Ingredients> GetIngredientList(string query)
+        public List<Ingredients> GetIngredientsList(string query)
         {
             List<Ingredients> ingredients = new List<Ingredients>();
             IDbConnection conn = new DbAccess();
@@ -146,6 +148,29 @@ namespace VendingMachineAssignment
                 ingredients.Add(ingredient);
             }
             return ingredients;
+        }
+
+        public List<Drinks> GetDrinksList(string _selectDrinks)
+        {
+            List<Drinks> drinks = new List<Drinks>();
+            IDbConnection conn = new DbAccess();
+
+            SqlCommand a = new SqlCommand(_selectDrinks, conn.GetConnection());
+            SqlDataReader dr = a.ExecuteReader();
+
+            while (dr.Read())
+            {
+                Drinks drink = new Drinks(
+                   dr.GetInt32(dr.GetOrdinal("DrinkId")), // Get IngredientId as int
+                   dr.GetString(dr.GetOrdinal("DrinkName")), // Get IngredientName as string
+                   dr.GetInt32(dr.GetOrdinal("DrinkPrice")) // Get IngredientStock as string
+                 );
+
+                // Add the Ingredients object to the list
+                drinks.Add(drink);
+            }
+            return drinks;
+
         }
 
 
@@ -193,7 +218,7 @@ namespace VendingMachineAssignment
         }
 
         //
-        public bool CheckStockAmount()
+        public int CheckStockAmount()
         {
             IDbConnection conn = new DbAccess();
             conn.GetConnection();
@@ -201,26 +226,16 @@ namespace VendingMachineAssignment
             SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
             SqlDataReader rdr = cmd.ExecuteReader();
 
-            if (rdr.Read())
+            try
             {
-
+                rdr.Read();
                 int data = rdr.GetInt32(0);
-                if (data <= 0)
-                {
-                    conn.CloseConnection();
-                    return false;
-                }
-                else
-                {
-                    conn.CloseConnection();
-                    return true;
-                }
+                return data;
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                conn.CloseConnection();
-                return false;
+                MessageBox.Show($"{ex}");
+                return 0;
             }
         }
 
