@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
@@ -16,6 +18,7 @@ namespace VendingMachineAssignment
         void CloseConnection();
         void WriteDatabase(string query);
         int ReadDatabaseField(string query);
+        DataSet ReadDatabaseColumn(string query);
         int GetDrinkPrice(string a);
         int ReturnStockAmount(string a);
 
@@ -97,6 +100,27 @@ namespace VendingMachineAssignment
                 {
                     MessageBox.Show("Error writing to database: " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return -1;
+                }
+            }
+        }
+
+        public DataSet ReadDatabaseColumn(string query)
+        {
+            DataSet ds = new DataSet();
+            SqlDataAdapter adapter = new SqlDataAdapter();
+
+            using (SqlConnection conn = GetConnection())
+            {
+                adapter.SelectCommand = new SqlCommand(query, conn);
+                try
+                {
+                    adapter.Fill(ds);
+                    return ds;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Error writing to database: " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return ds;
                 }
             }
         }
