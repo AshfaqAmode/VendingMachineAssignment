@@ -19,6 +19,7 @@ namespace VendingMachineAssignment
         void WriteDatabase(string query);
         int ReadDatabaseField(string query);
         DataSet ReadDatabaseColumn(string query);
+        List<Ingredients> CreateIngredientList(string query);
         int GetDrinkPrice(string a);
         int ReturnStockAmount(string a);
 
@@ -123,6 +124,28 @@ namespace VendingMachineAssignment
                     return ds;
                 }
             }
+        }
+
+        public List<Ingredients> CreateIngredientList(string query)
+        {
+            List<Ingredients> ingredients = new List<Ingredients>();
+            IDbConnection conn = new DbAccess();
+
+            SqlCommand a = new SqlCommand(query, conn.GetConnection());
+            SqlDataReader dr = a.ExecuteReader(); // Fill in what is needed, can't remember offhand
+
+            while (dr.Read())
+            {
+                Ingredients ingredient = new Ingredients(
+                   dr.GetInt32(dr.GetOrdinal("IngredientId")), // Get IngredientId as int
+                   dr.GetString(dr.GetOrdinal("IngredientName")), // Get IngredientName as string
+                   dr.GetString(dr.GetOrdinal("IngredientStock")) // Get IngredientStock as string
+                 );
+
+                // Add the Ingredients object to the list
+                ingredients.Add(ingredient);
+            }
+            return ingredients;
         }
 
 
