@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VendingMachineAssignment.Business_Logic_Layer
 {
-    internal class Drinks
+    public class Drinks
     {
         private int _drinkId;
         private string _drinkName;
