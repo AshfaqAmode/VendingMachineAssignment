@@ -44,32 +44,43 @@ namespace VendingMachineAssignment
         public bool CheckStockAmount()
         {
             IDbConnection conn = new DbAccess();
-            conn.GetConnection();
-            string query = $"SELECT IngredientStock FROM Ingredients";
-            SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-            SqlDataReader rdr = cmd.ExecuteReader();
-
-            if (rdr.Read())
+            int data;
+            data = conn.ReadDatabase($"SELECT IngredientStock FROM Ingredients");
+            if ( data > 0)
             {
-                
-                int data = rdr.GetInt32(0);
-                if (data <= 0)
-                {
-                    conn.CloseConnection();
-                    return false;
-                }
-                else
-                {
-                    conn.CloseConnection();
-                    return true;
-                }
+                return true;
             }
             else
             {
-                MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                conn.CloseConnection();
+                MessageBox.Show("One or more items need to be restocked!");
                 return false;
             }
+            //conn.GetConnection();
+            //string query = $"SELECT IngredientStock FROM Ingredients";
+            //SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
+            //SqlDataReader rdr = cmd.ExecuteReader();
+
+            //if (rdr.Read())
+            //{
+
+            //    int data = rdr.GetInt32(0);
+            //    if (data <= 0)
+            //    {
+            //        conn.CloseConnection();
+            //        return false;
+            //    }
+            //    else
+            //    {
+            //        conn.CloseConnection();
+            //        return true;
+            //    }
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    conn.CloseConnection();
+            //    return false;
+            //}
         }
     }
 

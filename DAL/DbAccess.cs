@@ -15,6 +15,7 @@ namespace VendingMachineAssignment
         SqlConnection GetConnection();
         SqlConnection CloseConnection();
         void WriteDatabase(string query);
+        int ReadDatabase(string query);
         int GetDrinkPrice(string a);
         int ReturnStockAmount(string a);
 
@@ -62,6 +63,26 @@ namespace VendingMachineAssignment
                     MessageBox.Show("Error writing to database: " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
+            }
+        }
+
+        //Created ReadDatabase function
+        public int ReadDatabase(string query)
+        {
+            using (SqlConnection conn = GetConnection())
+            {
+                SqlCommand a = new SqlCommand(query, conn);
+                try
+                {                    
+                    SqlDataReader rdr = a.ExecuteReader();
+                    rdr.Read();
+                    return rdr.GetInt32(0);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Error writing to database: " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return -1;
+                }
             }
         }
 
