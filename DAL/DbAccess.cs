@@ -126,7 +126,7 @@ namespace VendingMachineAssignment
             }
         }
 
-        public List<Ingredients> CreateIngredientList(string query)
+        public List<Ingredients> GetIngredientList(string query)
         {
             List<Ingredients> ingredients = new List<Ingredients>();
             IDbConnection conn = new DbAccess();
