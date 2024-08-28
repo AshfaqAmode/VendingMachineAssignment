@@ -29,11 +29,11 @@ namespace VendingMachineAssignment
             try
             {
                 connection.Open();
-                Console.WriteLine("Connection opened successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error opening connection: " + ex.Message);
+                MessageBox.Show("Error opening connection: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                System.Environment.Exit(0);
             }
             return connection;
         }
@@ -44,6 +44,8 @@ namespace VendingMachineAssignment
             connection.Close();
             return connection;
         }
+
+        
 
         /*
         public void CloseConnection(SqlConnection connection)
