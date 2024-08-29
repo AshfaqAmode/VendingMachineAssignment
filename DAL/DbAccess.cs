@@ -168,26 +168,6 @@ namespace VendingMachineAssignment
             return drinks;
         }
 
-
-
-        //returns drink price (int) -- now redundant with drink obj
-        public int GetDrinkPrice(string drink)
-        {
-            IDbConnection conn = new DbAccess();
-            int price;
-            price = conn.ReadDatabaseField($"SELECT DrinkPrice FROM Drinks WHERE DrinkName = '{drink}'");
-                            if (price > 0)
-                            {
-                                return price;
-                            }
-                            else
-                            {
-                                // Handle the case where the result is null or not a valid integer
-                                throw new Exception("Invalid result from query.");
-                            }
-
-        }
-
         //return stock amount -- now redundant with ingrdient object
         public int ReturnIngredientStockAmount(string a)
         {
