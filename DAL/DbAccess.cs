@@ -20,7 +20,6 @@ namespace VendingMachineAssignment
         int ReadDatabaseRecord(string query);
         List<Ingredients> GetIngredientsList(string query);
         List<Drinks> GetFullDrinksList(string query);
-        int ReturnStockAmount(string a);
 
     }
 
@@ -143,12 +142,6 @@ namespace VendingMachineAssignment
                 }
             }
             return drinks;
-        }
-
-
-        public int ReturnStockAmount(string a)
-        {
-            throw new NotImplementedException();
         }
     }
 
