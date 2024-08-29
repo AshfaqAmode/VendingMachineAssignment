@@ -243,7 +243,7 @@ namespace VendingMachineAssignment
                         drink.IngredientId.Add(IngredientId);
                         drinks.Add(drink);
                     }
-                    drinks.Where(x => 
+                    var drink = drinks.Where(x => x.DrinkId == drinkid) {drink.IngredientId.Add(IngredientId)}
 
                     //while (dr.GetInt32(dr.GetOrdinal("DrinkId")) == drink.DrinkId)
                     //{
