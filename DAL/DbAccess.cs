@@ -16,8 +16,6 @@ namespace VendingMachineAssignment
     public interface IDbConnection
     {
         SqlConnection GetConnection();
-        void CloseConnection();
-        void CloseConnectionNew(SqlConnection connection);
         void WriteDatabase(string query);
         int ReadDatabaseField(string query);
         DataTable ReadDatabaseRow(string query);
@@ -47,29 +45,6 @@ namespace VendingMachineAssignment
             }
             return connection;
         }
-
-        public void CloseConnection()
-        {
-            var connection = new SqlConnection(Constant.connectionString);
-            connection.Open();
-            connection.Close();
-        }
-        
-        public void CloseConnectionNew(SqlConnection connection)
-        {
-            if (connection != null && connection.State == System.Data.ConnectionState.Open)
-            {
-                try
-                {
-                    connection.Close();
-                    Console.WriteLine("Connection closed successfully.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error closing connection: " + ex.Message);
-                }
-            }
-        }
         
         
         //uses SqlCommand to update the database depending on parameter (query)
@@ -86,7 +61,6 @@ namespace VendingMachineAssignment
                 {
                     MessageBox.Show("Error writing to database: " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                CloseConnectionNew(conn);
             }
             
         }
@@ -233,7 +207,6 @@ namespace VendingMachineAssignment
                 else
                 {
                     MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    conn.CloseConnection();
                     return 0;
                 }
             }
