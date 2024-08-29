@@ -62,6 +62,7 @@ namespace VendingMachineAssignment
             
         }
 
+
         //reads a record from database
         public int ReadDatabaseRecord(string query)
         {
@@ -81,6 +82,7 @@ namespace VendingMachineAssignment
                 }
             }
         }
+
 
         //populates a list(type ingredients) from ingredients table
         public List<Ingredients> GetIngredientsList(string query)
@@ -106,6 +108,7 @@ namespace VendingMachineAssignment
             }
             return ingredients;
         }
+
 
         //populates a list(type drinks) from drinks table left join drinksIngredients table to get the ingredients for each drink
         public List<Drinks> GetFullDrinksList(string query)
@@ -144,6 +147,7 @@ namespace VendingMachineAssignment
             }
             return drinks;
         }
+
 
         //Updates Ingredient Stock in the database based on flag of ingredient obj
         public void UpdateIngredientStock(List<Ingredients> ingredientList)
