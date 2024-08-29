@@ -20,6 +20,7 @@ namespace VendingMachineAssignment
                 if (ingredient.IngredientName == removeIngredients)
                 {
                     ingredient.IngredientStock -= 1;
+                    ingredient.Changed = true;
                 }
             }
         }

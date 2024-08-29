@@ -13,6 +13,7 @@ namespace VendingMachineAssignment.Business_Logic_Layer
         private int _ingredientId;
         private string _ingredientName;
         private int _ingredientStock;
+        private bool changed = false;
 
         public Ingredients(int ingredientId, string ingredientName, int ingredientStock)
         {
@@ -24,8 +25,6 @@ namespace VendingMachineAssignment.Business_Logic_Layer
         public int IngredientId { get => _ingredientId; set => _ingredientId = value; }
         public string IngredientName { get => _ingredientName; set => _ingredientName = value; }
         public int IngredientStock { get => _ingredientStock; set => _ingredientStock = value; }
-
-
-
+        public bool Changed { get => changed; set => changed = value; }
     }
 }

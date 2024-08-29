@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using VendingMachineAssignment.Business_Logic_Layer;
+using static System.Windows.Forms.LinkLabel;
 
 namespace VendingMachineAssignment
 {
@@ -22,8 +23,8 @@ namespace VendingMachineAssignment
         DataTable ReadDatabaseRow(string query);
         List<Ingredients> GetIngredientsList(string query);
         List<Drinks> GetDrinksList(string query);
-        List<Drinks> GetDrinksIngredientsList(string query, List<Ingredients> ingredients);
-        List<Drinks> GetFullDrinksList();
+        List<Drinks> GetDrinksIngredientIdList(string query);
+        List<Drinks> GetFullDrinksList(string query);
         int GetDrinkPrice(string a);
         int ReturnStockAmount(string a);
         int CheckStockAmount();
@@ -106,7 +107,7 @@ namespace VendingMachineAssignment
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Error writing to database: " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error reading from database: " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return -1;
                 }
             }
@@ -158,6 +159,9 @@ namespace VendingMachineAssignment
             return ingredients;
         }
 
+
+
+        //ignore
         public List<Drinks> GetDrinksList(string query)
         {
             List<Drinks> drinks = new List<Drinks>();
@@ -185,7 +189,8 @@ namespace VendingMachineAssignment
             return drinks;
         }
 
-        public List<Drinks> GetDrinksIngredientsList(string query, List<Ingredients> ingredients)
+        //ignore
+        public List<Drinks> GetDrinksIngredientIdList(string query)
         {
             List<Drinks> drinks = GetDrinksList(Constant.selectDrinksQuery);
             IDbConnection conn = new DbAccess();
@@ -198,30 +203,59 @@ namespace VendingMachineAssignment
                 {
                     foreach (var drink in drinks)
                     {
-                        if (drink.DrinkId == dr.GetInt32(dr.GetOrdinal("DrinkId")))
+                        while (dr.Read())
                         {
-                            int CurrentIngredientId = dr.GetInt32(dr.GetOrdinal("IngredientId"));
-                            foreach (Ingredients ingredient in ingredients)
+                            if (drink.DrinkId == dr.GetInt32(dr.GetOrdinal("DrinkId")))
                             {
-                                if(ingredient.IngredientId == CurrentIngredientId)
-                                {
-                                    drink.IngredientsList.Add(ingredient);
-                                }
+                                int CurrentIngredientId = dr.GetInt32(dr.GetOrdinal("IngredientId"));
+                                drink.IngredientId.Add(CurrentIngredientId);
                             }
                         }
+                        
                     }
                 }
             }
-                
             return drinks;
 
         }
 
-        public List<Drinks> GetFullDrinksList()
+
+        public List<Drinks> GetFullDrinksList(string query)
         {
-            List<Drinks> drinks = GetDrinksIngredientsList(Constant.selectDrinksIngredientsQuery, GetIngredientsList(Constant.selectIngredientsQuery));
+            List<Drinks> drinks = new List<Drinks> ();
+
+            IDbConnection conn = new DbAccess();
+            using (SqlCommand a = new SqlCommand(query, conn.GetConnection()))
+            {
+                SqlDataReader dr = a.ExecuteReader();
+                while (dr.Read())
+                {
+                    var drinkid = dr.GetInt32(dr.GetOrdinal("DrinkId"));
+
+                    int IngredientId = dr.GetInt32(dr.GetOrdinal("IngredientId"));
+                    if (!drinks.Exists(x => x.DrinkId == drinkid)) {
+                        Drinks drink = new Drinks
+                        (
+                           drinkid, // Get IngredientId as int
+                           dr.GetString(dr.GetOrdinal("DrinkName")), // Get IngredientName as string
+                           dr.GetInt32(dr.GetOrdinal("DrinkPrice"))// Get IngredientStock as string
+                        );
+                        drink.IngredientId.Add(IngredientId);
+                        drinks.Add(drink);
+                    }
+                    drinks.Where(x => 
+
+                    //while (dr.GetInt32(dr.GetOrdinal("DrinkId")) == drink.DrinkId)
+                    //{
+                    //    int IngredientId = dr.GetInt32(dr.GetOrdinal("IngredientId"));
+                    //    drink.IngredientId.Add(IngredientId);
+                    //    dr.Read();
+                    //}
+                }
+            }
             return drinks;
         }
+
 
 
         //returns drink price (int) -- now redundant with drink obj

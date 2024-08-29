@@ -11,15 +11,8 @@ namespace VendingMachineAssignment.Business_Logic_Layer
         private int _drinkId;
         private string _drinkName;
         private int _drinkPrice;
-        private List<Ingredients> _ingredientsList = new List<Ingredients> { };
+        private List<int> _ingredientId = new List<int> { };
 
-
-        //public Drinks(int drinkId, string drinkName, int drinkPrice)
-        //{
-        //    DrinkId = drinkId;
-        //    DrinkName = drinkName;
-        //    DrinkPrice = drinkPrice;
-        //}
 
         public Drinks(int drinkId, string drinkName, int drinkPrice)
         {
@@ -31,6 +24,6 @@ namespace VendingMachineAssignment.Business_Logic_Layer
         public int DrinkId { get => _drinkId; set => _drinkId = value; }
         public string DrinkName { get => _drinkName; set => _drinkName = value; }
         public int DrinkPrice { get => _drinkPrice; set => _drinkPrice = value; }
-        public List<Ingredients> IngredientsList { get => _ingredientsList; set => _ingredientsList = value; }
+        public List<int> IngredientId { get => _ingredientId; set => _ingredientId = value; }
     }
 }

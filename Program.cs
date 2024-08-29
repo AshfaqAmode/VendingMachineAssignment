@@ -22,13 +22,20 @@ namespace VendingMachineAssignment
             IDbConnection conn = new DbAccess();
 
 
-            List<Ingredients> b = conn.GetIngredientsList(Constant.selectIngredientsQuery);
+            //List<Ingredients> b = conn.GetIngredientsList(Constant.selectIngredientsQuery);
             //print objects in drinks list
             List<Drinks> a = new List<Drinks>();
-            a = conn.GetDrinksIngredientsList(Constant.selectDrinksIngredientsQuery, b);
+            a = conn.GetFullDrinksList(Constant.selectLeftJoinDrinksIngredientsQuery);
             foreach (var drink in a)
             {
-                MessageBox.Show($"{drink.DrinkName}, {drink.DrinkId}, {drink.DrinkPrice}, {drink.IngredientsList}");
+                string ingredientidconcat = "";
+
+                foreach (int ingredientId in drink.IngredientId)
+                {
+                    ingredientidconcat = ingredientidconcat + ingredientId.ToString();
+                }
+
+                MessageBox.Show($"{drink.DrinkName}, {drink.DrinkId}, {drink.DrinkPrice}, {ingredientidconcat}");
             }
 
             //print objects in ingredients list
