@@ -72,7 +72,6 @@
     <Compile Include="PopulateTextBox.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Stock.cs" />
     <Compile Include="StockAmountDisplay.cs" />
     <Compile Include="Presentation Layer\ButtonControl.cs" />
     <Compile Include="VendingMachineDataSet.Designer.cs">
