@@ -24,5 +24,24 @@ namespace VendingMachineAssignment
 
             return stockMissing;
         }
+
+        public void RemoveStock(string selectedDrink, List<Ingredients> ingredientList, List<Drinks> drinkList)
+        {
+            var drink = drinkList.FirstOrDefault(d => d.DrinkName == selectedDrink);
+            var ingredientsNeeded = drink.IngredientId;
+
+            if (drink != null)
+            {
+                foreach (var ingredientId in ingredientsNeeded)
+                {
+                    var ingredient = ingredientList.FirstOrDefault(i => i.IngredientId == ingredientId);
+                    if (ingredient != null)
+                    {
+                        ingredient.IngredientStock -= 1;
+                        ingredient.Changed = true;
+                    }
+                }
+            }
+        }
     }
 }
