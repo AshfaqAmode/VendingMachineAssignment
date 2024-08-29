@@ -122,7 +122,7 @@ namespace VendingMachineAssignment
         private async void RestockButton_Click(object sender, EventArgs e)
         {
             //Restock function from restock class called so 10 added to all item stock
-            Stock restockObj = new Stock();
+            IStockOperations restockObj = new StockOperations();
             restockObj.RestockAll();
 
             //Stock boxes populated again with updated stock
