@@ -146,31 +146,6 @@ namespace VendingMachineAssignment
             return drinks;
         }
 
-        //return stock amount -- now redundant with ingrdient object
-        public int ReturnIngredientStockAmount(string a)
-        {
-            IDbConnection conn = new DbAccess();
-            conn.GetConnection();
-            string query = $"SELECT IngredientStock FROM Ingredients WHERE IngredientName = '{a}'";
-
-            using (SqlCommand cmd = new SqlCommand(query, conn.GetConnection()))
-            {
-                SqlDataReader rdr = cmd.ExecuteReader();
-
-                if (rdr.Read())
-                {
-                    int data = rdr.GetInt32(0);
-                    return data;
-                }
-                else
-                {
-                    MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return 0;
-                }
-            }
-            
-        }
-
         //now redundant with ingredient obj
         public int CheckStockAmount()
         {
