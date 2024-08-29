@@ -13,6 +13,7 @@ namespace VendingMachineAssignment
     {
         bool CheckStockAmount(List<Ingredients> ingredientList);
         void RemoveStock(string selectedDrink, List<Ingredients> ingredientList, List<Drinks> drinkList);
+        void RestockAll(List<Ingredients> ingredientsList);
     }
 
     internal class StockOperations : IStockOperations
