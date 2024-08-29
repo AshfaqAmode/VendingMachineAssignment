@@ -230,27 +230,28 @@ namespace VendingMachineAssignment
                 SqlDataReader dr = a.ExecuteReader();
                 while (dr.Read())
                 {
-                    var drinkid = dr.GetInt32(dr.GetOrdinal("DrinkId"));
-
-                    int IngredientId = dr.GetInt32(dr.GetOrdinal("IngredientId"));
-                    if (!drinks.Exists(x => x.DrinkId == drinkid)) {
-                        Drinks drink = new Drinks
+                    var drinkId = dr.GetInt32(dr.GetOrdinal("DrinkId"));
+                    var drinkName = dr.GetString(dr.GetOrdinal("DrinkName"));
+                    int drinkPrice = dr.GetInt32(dr.GetOrdinal("DrinkPrice"));
+                    int ingredientId = dr.GetInt32(dr.GetOrdinal("IngredientId"));
+                     var drinkExists = (drinks.Exists(x => x.DrinkId == drinkId));
+                    
+                    if (!drinkExists)
+                    {
+                        Drinks newDrink = new Drinks
                         (
-                           drinkid, // Get IngredientId as int
-                           dr.GetString(dr.GetOrdinal("DrinkName")), // Get IngredientName as string
-                           dr.GetInt32(dr.GetOrdinal("DrinkPrice"))// Get IngredientStock as string
+                            drinkId,
+                            drinkName,
+                            drinkPrice
                         );
-                        drink.IngredientId.Add(IngredientId);
-                        drinks.Add(drink);
+                        newDrink.IngredientId.Add(ingredientId);
+                        drinks.Add(newDrink);
                     }
-                    drinks.Where(x => 
-
-                    //while (dr.GetInt32(dr.GetOrdinal("DrinkId")) == drink.DrinkId)
-                    //{
-                    //    int IngredientId = dr.GetInt32(dr.GetOrdinal("IngredientId"));
-                    //    drink.IngredientId.Add(IngredientId);
-                    //    dr.Read();
-                    //}
+                    else
+                    {
+                        var existingDrink = drinks.First(x => x.DrinkId == drinkId);
+                        existingDrink.IngredientId.Add(ingredientId);
+                    }
                 }
             }
             return drinks;

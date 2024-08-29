@@ -32,7 +32,7 @@ namespace VendingMachineAssignment
 
                 foreach (int ingredientId in drink.IngredientId)
                 {
-                    ingredientidconcat = ingredientidconcat + ingredientId.ToString();
+                    ingredientidconcat = ingredientidconcat + ", " + ingredientId.ToString();
                 }
 
                 MessageBox.Show($"{drink.DrinkName}, {drink.DrinkId}, {drink.DrinkPrice}, {ingredientidconcat}");
