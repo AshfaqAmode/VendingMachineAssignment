@@ -22,8 +22,6 @@ namespace VendingMachineAssignment
         int ReadDatabaseField(string query);
         DataTable ReadDatabaseRow(string query);
         List<Ingredients> GetIngredientsList(string query);
-        List<Drinks> GetDrinksList(string query);
-        List<Drinks> GetDrinksIngredientIdList(string query);
         List<Drinks> GetFullDrinksList(string query);
         int GetDrinkPrice(string a);
         int ReturnStockAmount(string a);
@@ -158,67 +156,6 @@ namespace VendingMachineAssignment
             }
             return ingredients;
         }
-
-
-
-        //ignore
-        public List<Drinks> GetDrinksList(string query)
-        {
-            List<Drinks> drinks = new List<Drinks>();
-            IDbConnection conn = new DbAccess();
-
-            using (SqlCommand a = new SqlCommand(query, conn.GetConnection()))
-            {
-                SqlDataReader dr = a.ExecuteReader();
-                while (dr.Read())
-                {
-                    Drinks drink = new Drinks(
-                       dr.GetInt32(dr.GetOrdinal("DrinkId")), // Get IngredientId as int
-                       dr.GetString(dr.GetOrdinal("DrinkName")), // Get IngredientName as string
-                       dr.GetInt32(dr.GetOrdinal("DrinkPrice"))// Get IngredientStock as string
-                     );
-
-                    // Add the Ingredients object to the list
-                    drinks.Add(drink);
-
-                    
-                }
-
-            }
-
-            return drinks;
-        }
-
-        //ignore
-        public List<Drinks> GetDrinksIngredientIdList(string query)
-        {
-            List<Drinks> drinks = GetDrinksList(Constant.selectDrinksQuery);
-            IDbConnection conn = new DbAccess();
-
-            //SqlCommand a = new SqlCommand(query, conn.GetConnection());
-            using (SqlCommand a = new SqlCommand(query, conn.GetConnection()))
-            {
-                SqlDataReader dr = a.ExecuteReader();
-                while (dr.Read())
-                {
-                    foreach (var drink in drinks)
-                    {
-                        while (dr.Read())
-                        {
-                            if (drink.DrinkId == dr.GetInt32(dr.GetOrdinal("DrinkId")))
-                            {
-                                int CurrentIngredientId = dr.GetInt32(dr.GetOrdinal("IngredientId"));
-                                drink.IngredientId.Add(CurrentIngredientId);
-                            }
-                        }
-                        
-                    }
-                }
-            }
-            return drinks;
-
-        }
-
 
         public List<Drinks> GetFullDrinksList(string query)
         {
