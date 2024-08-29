@@ -12,10 +12,12 @@ namespace VendingMachineAssignment
     internal class DrinkButtons
     {
 
-        //removes one from the 
-        public void TakeDrinkIngredients(string removeIngredients, List<Ingredients> ingredients)
+        //removes one from the ingredient object's stock, then updates database.
+        public void TakeDrinkIngredients(string removeIngredients, List<Ingredients> ingredientsList)
         {
-            foreach (var ingredient in ingredients)
+            IDbOperations conn = new DbOperations();
+
+            foreach (var ingredient in ingredientsList)
             {
                 if (ingredient.IngredientName == removeIngredients)
                 {
@@ -23,9 +25,12 @@ namespace VendingMachineAssignment
                     ingredient.Changed = true;
                 }
             }
+
+            conn.UpdateIngredientStockDB(ingredientsList);
         }
+
         
-        //retrieves drink price
+        //checks if user can afford the drinkSelected, then removes its price from the balance
         public bool PurchaseDrink(string drinkSelected,ref int balance, List<Drinks> drinks)
         {
             bool canPurchase = false;
@@ -40,6 +45,20 @@ namespace VendingMachineAssignment
             }
 
             return canPurchase;
+
+            /*
+            // Find the drink that matches the selection and is affordable
+            var drinkToPurchase = drinks
+                .FirstOrDefault(drink => drink.DrinkName == drinkSelected && drink.DrinkPrice <= balance);
+
+            if (drinkToPurchase != null)
+            {
+                // Deduct the price from the balance
+                balance -= drinkToPurchase.DrinkPrice;
+                return true; // Purchase was successful
+            }
+
+            return false; // No matching drink or not affordable*/
         }
 
 

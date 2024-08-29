@@ -20,7 +20,7 @@ namespace VendingMachineAssignment
         int ReadDatabaseRecord(string query);
         List<Ingredients> GetIngredientsList(string query);
         List<Drinks> GetFullDrinksList(string query);
-        void UpdateIngredientStock(List<Ingredients> ingredientList);
+        void UpdateIngredientStockDB(List<Ingredients> ingredientList);
 
     }
 
@@ -150,7 +150,7 @@ namespace VendingMachineAssignment
 
 
         //Updates Ingredient Stock in the database based on flag of ingredient obj
-        public void UpdateIngredientStock(List<Ingredients> ingredientList)
+        public void UpdateIngredientStockDB(List<Ingredients> ingredientList)
         {
             IDbOperations conn = new DbOperations();
             var changedIngredientsList = ingredientList.Where(i => i.Changed).ToList();

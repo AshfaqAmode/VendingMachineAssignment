@@ -61,7 +61,7 @@ namespace VendingMachineAssignment
                 ingredient.Changed = true;
             }
 
-            conn.UpdateIngredientStock(ingredientsList);
+            conn.UpdateIngredientStockDB(ingredientsList);
         }
     }
 }
