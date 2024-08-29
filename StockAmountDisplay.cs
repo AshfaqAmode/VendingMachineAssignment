@@ -16,32 +16,6 @@ namespace VendingMachineAssignment
 
     internal class DisplayStock 
     {
-
-        //returns stock amount of specified ingredient
-        public int ReturnStockAmount(string a)
-        {
-            IDbConnection conn = new DbOperations();
-            string query = $"SELECT IngredientStock FROM Ingredients WHERE IngredientName = '{a}'";
-
-            //SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-            using (SqlCommand cmd = new SqlCommand(query, conn.GetConnection()))
-            {
-                SqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read())
-                {
-                    int data = rdr.GetInt32(0);
-                    return data;
-
-                }
-                else
-                {
-                    MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return 0;
-                }
-
-            }
-        }
-
         public bool CheckStockAmount(List<Ingredients> ingredientList)
         {
             bool stockMissing = false;
