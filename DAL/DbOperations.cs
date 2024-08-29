@@ -20,6 +20,7 @@ namespace VendingMachineAssignment
         int ReadDatabaseRecord(string query);
         List<Ingredients> GetIngredientsList(string query);
         List<Drinks> GetFullDrinksList(string query);
+        void UpdateIngredientStock(List<Ingredients> ingredientList);
 
     }
 
@@ -142,6 +143,29 @@ namespace VendingMachineAssignment
                 }
             }
             return drinks;
+        }
+
+        //Updates Ingredient Stock in the database based on flag of ingredient obj
+        public void UpdateIngredientStock(List<Ingredients> ingredientList)
+        {
+            IDbConnection conn = new DbOperations();
+            var changedIngredientsList = ingredientList.Where(i => i.Changed).ToList();
+
+            using (conn.GetConnection())
+            {
+                foreach (Ingredients ingredient in changedIngredientsList)
+                {
+                    using (var cmd = new SqlCommand("UPDATE Ingredients SET IngredientStock = @Stock WHERE IngredientId = @Id", conn.GetConnection()))
+                    {
+                        cmd.Parameters.AddWithValue("@Stock", ingredient.IngredientStock);
+                        cmd.Parameters.AddWithValue("@Id", ingredient.IngredientId);
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    ingredient.Changed = false;
+                }
+            }
         }
     }
 
