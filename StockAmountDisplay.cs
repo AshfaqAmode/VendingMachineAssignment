@@ -27,6 +27,7 @@ namespace VendingMachineAssignment
             return stockMissing;
         }
 
+
         //removes one from the stock of ingredients... ingredients identified by ingredientId list in drink obj
         public void RemoveStock(string selectedDrink, List<Ingredients> ingredientList, List<Drinks> drinkList)
         {
@@ -46,7 +47,5 @@ namespace VendingMachineAssignment
                 }
             }
         }
-
-
     }
 }

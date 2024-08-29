@@ -19,7 +19,7 @@ namespace VendingMachineAssignment
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
-            IDbConnection conn = new DbOperations();
+            IDbOperations conn = new DbOperations();
 
 
             //List<Ingredients> b = conn.GetIngredientsList(Constant.selectIngredientsQuery);

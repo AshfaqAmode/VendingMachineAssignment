@@ -13,7 +13,7 @@ using static System.Windows.Forms.LinkLabel;
 
 namespace VendingMachineAssignment
 {
-    public interface IDbConnection
+    public interface IDbOperations
     {
         SqlConnection GetConnection();
         void WriteDatabase(string query);
@@ -25,7 +25,7 @@ namespace VendingMachineAssignment
     }
 
 
-    public class DbOperations : IDbConnection
+    public class DbOperations : IDbOperations
     {
         //DB open and close with exception handling
         public SqlConnection GetConnection()
@@ -88,7 +88,7 @@ namespace VendingMachineAssignment
         public List<Ingredients> GetIngredientsList(string query)
         {
             List<Ingredients> ingredients = new List<Ingredients>();
-            IDbConnection conn = new DbOperations();
+            IDbOperations conn = new DbOperations();
 
             using (SqlCommand a = new SqlCommand(query, conn.GetConnection()))
             {
@@ -115,7 +115,7 @@ namespace VendingMachineAssignment
         {
             List<Drinks> drinks = new List<Drinks> ();
 
-            IDbConnection conn = new DbOperations();
+            IDbOperations conn = new DbOperations();
             using (SqlCommand a = new SqlCommand(query, conn.GetConnection()))
             {
                 SqlDataReader dr = a.ExecuteReader();
@@ -152,7 +152,7 @@ namespace VendingMachineAssignment
         //Updates Ingredient Stock in the database based on flag of ingredient obj
         public void UpdateIngredientStock(List<Ingredients> ingredientList)
         {
-            IDbConnection conn = new DbOperations();
+            IDbOperations conn = new DbOperations();
             var changedIngredientsList = ingredientList.Where(i => i.Changed).ToList();
 
             using (conn.GetConnection())
