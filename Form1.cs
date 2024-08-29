@@ -18,28 +18,18 @@ namespace VendingMachineAssignment
     public partial class Form1 : Form
     {
         private int balance;
-        //IDbConnection conn = new DbAccess();
-        //List<Drinks> drinks = conn.GetDrinksList(Constant.selectDrinksQuery);
 
-        string[,] drinksAndIngredients = new string[,]
+        //enters loaded data values from the ingredient list into stock boxes
+        public void PopulateStock(List<Ingredients> ingredientsList)
         {
-            { "Tea", "Milk", "Tea", "" }, // Last column left empty for variable length
-            { "Cappuccino", "Milk", "Coffee", "" },
-            { "Mochaccino", "Milk", "Coffee", "Chocolate" },
-            { "Hot Chocolate", "Milk", "Chocolate", "" },
-            { "Milk", "Milk", "", "" }
-        };
+            IDbOperations conn = new DbOperations();
+            var ingredientsList = conn.GetIngredientsList(Constant.selectIngredientsQuery);
 
-        //enters loaded data values from the db into stock boxes
-        public void PopulateStock()
-        {
-            var stockObj = new StockOperations();
-
-            TeaStockTextBox.Text = $"{stockObj.ReturnStockAmount("Tea")}";
-            SugarStockTextBox.Text = $"{stockObj.ReturnStockAmount("Sugar")}";
-            MilkStockTextBox.Text = $"{stockObj.ReturnStockAmount("Milk")}";
-            ChocolateStockTextBox.Text = $"{stockObj.ReturnStockAmount("Chocolate")}";
-            CoffeeStockTextBox.Text = $"{stockObj.ReturnStockAmount("Coffee")}";
+            TeaStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Tea").Select(i => i.IngredientStock)}";
+            SugarStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Sugar").Select(i => i.IngredientStock)}";
+            MilkStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Milk").Select(i => i.IngredientStock)}";
+            ChocolateStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Chocolate").Select(i => i.IngredientStock)}";
+            CoffeeStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Coffee").Select(i => i.IngredientStock)}";
             AmountTextBox.Text = $"{balance}";
         }
 
@@ -114,9 +104,23 @@ namespace VendingMachineAssignment
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            PopulateStock();
+            IDbOperations conn = new DbOperations();
             var sam = new StockOperations();
-            sam.CheckStockAmount();
+
+            var ingredientsList = conn.GetIngredientsList(Constant.selectIngredientsQuery);
+            var drinksList = conn.GetFullDrinksList(Constant.selectLeftJoinDrinksIngredientsQuery);
+
+            PopulateStock(ingredientsList);
+
+            while (sam.CheckStockAmount(ingredientsList) == false)
+            {
+                LogTextBox.Text = $"> URGENT... Please restock!";
+                ButtonControl.DisableAllControls(this);
+                RestockButton.Enabled = true;
+            }
+
+
+            ;
         }
 
         private async void RestockButton_Click(object sender, EventArgs e)

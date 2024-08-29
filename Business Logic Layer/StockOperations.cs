@@ -62,6 +62,7 @@ namespace VendingMachineAssignment
             }
 
             conn.UpdateIngredientStockDB(ingredientsList);
+
         }
     }
 }
