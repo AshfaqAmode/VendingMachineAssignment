@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using VendingMachineAssignment.Business_Logic_Layer;
 //using VendingMachineAssignment.Presentation_Layer;
 
 
@@ -17,6 +18,8 @@ namespace VendingMachineAssignment
     public partial class Form1 : Form
     {
         private int balance;
+        //IDbConnection conn = new DbAccess();
+        //List<Drinks> drinks = conn.GetDrinksList(Constant.selectDrinksQuery);
 
         string[,] drinksAndIngredients = new string[,]
         {
@@ -48,7 +51,7 @@ namespace VendingMachineAssignment
             {
                 DrinkButtons a = new DrinkButtons();
                 LogTextBox.AppendText($"> Adding Sugar..." + Environment.NewLine);
-                a.TakeDrinkIngredients("Sugar");
+                //a.TakeDrinkIngredients("Sugar");
                 PopulateStock();
                 await Task.Delay(2000);
             }
@@ -58,8 +61,10 @@ namespace VendingMachineAssignment
         {
             ButtonControl.DisableAllControls(this);
             DrinkButtons a = new DrinkButtons();
+            IDbConnection conn = new DbAccess();
+            List<Drinks> drinks = conn.GetDrinksList(Constant.selectDrinksQuery);
 
-            if (a.PurchaseDrink($"{currentDrink}", ref balance))
+            if (a.PurchaseDrink($"{currentDrink}", ref balance, drinks))
             {
                 LogTextBox.AppendText(Environment.NewLine + $"> {currentDrink} selected" + Environment.NewLine);
                 await Task.Delay(500);
@@ -74,7 +79,7 @@ namespace VendingMachineAssignment
                             if (!(drinksAndIngredients[i, j] == ""))
                             {
                                 LogTextBox.AppendText($"> Adding {drinksAndIngredients[i, j]}..." + Environment.NewLine);
-                                a.TakeDrinkIngredients($"{drinksAndIngredients[i, j]}");
+                                //a.TakeDrinkIngredients($"{drinksAndIngredients[i, j]}");
                                 PopulateStock();
                                 await Task.Delay(2000);
                             }
@@ -104,7 +109,6 @@ namespace VendingMachineAssignment
         public Form1()
         {
             InitializeComponent();
-
         }
 
 

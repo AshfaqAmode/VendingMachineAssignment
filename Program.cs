@@ -21,12 +21,15 @@ namespace VendingMachineAssignment
             Application.Run(new Form1());
             IDbConnection conn = new DbAccess();
 
+
+            List<Ingredients> b = conn.GetIngredientsList(Constant.selectIngredientsQuery);
             //print objects in drinks list
-            //List<Drinks> a = conn.GetDrinksList(Constant.selectDrinksQuery);
-            //foreach (var drink in a)
-            //{
-            //    MessageBox.Show($"{drink.DrinkName}, {drink.DrinkId}, {drink.DrinkPrice}");
-            //}
+            List<Drinks> a = new List<Drinks>();
+            a = conn.GetDrinksIngredientsList(Constant.selectDrinksIngredientsQuery, b);
+            foreach (var drink in a)
+            {
+                MessageBox.Show($"{drink.DrinkName}, {drink.DrinkId}, {drink.DrinkPrice}, {drink.IngredientsList}");
+            }
 
             //print objects in ingredients list
             //List<Ingredients> b = conn.GetIngredientsList(Constant.selectIngredientsQuery);

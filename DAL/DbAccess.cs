@@ -22,7 +22,8 @@ namespace VendingMachineAssignment
         DataTable ReadDatabaseRow(string query);
         List<Ingredients> GetIngredientsList(string query);
         List<Drinks> GetDrinksList(string query);
-        //List<DrinksIngredients> GetDrinksIngredientsList(string query);
+        List<Drinks> GetDrinksIngredientsList(string query, List<Ingredients> ingredients);
+        List<Drinks> GetFullDrinksList();
         int GetDrinkPrice(string a);
         int ReturnStockAmount(string a);
         int CheckStockAmount();
@@ -47,6 +48,7 @@ namespace VendingMachineAssignment
             }
             return connection;
         }
+
         public void CloseConnection()
         {
             var connection = new SqlConnection(Constant.connectionString);
@@ -137,75 +139,89 @@ namespace VendingMachineAssignment
             List<Ingredients> ingredients = new List<Ingredients>();
             IDbConnection conn = new DbAccess();
 
-            SqlCommand a = new SqlCommand(query, conn.GetConnection());
-            SqlDataReader dr = a.ExecuteReader();
-            
-            while (dr.Read())
+            using (SqlCommand a = new SqlCommand(query, conn.GetConnection()))
             {
-                Ingredients ingredient = new Ingredients(
+                SqlDataReader dr = a.ExecuteReader();
+                while (dr.Read())
+                {
+                    Ingredients ingredient = new Ingredients
+                    (
                    dr.GetInt32(dr.GetOrdinal("IngredientId")), // Get IngredientId as int
                    dr.GetString(dr.GetOrdinal("IngredientName")), // Get IngredientName as string
                    dr.GetInt32(dr.GetOrdinal("IngredientStock")) // Get IngredientStock as string
-                 );
+                    );
 
-                // Add the Ingredients object to the list
-                ingredients.Add(ingredient);
+                    // Add the Ingredients object to the list
+                    ingredients.Add(ingredient);
+                }
             }
             return ingredients;
         }
-
-        //public void UpdateIngredientsList(List<Ingredients> ingredients,string drinkName)
-        //{
-        //    foreach (Ingredients ingredient in ingredients)
-        //    {
-                
-        //    }
-        //}
 
         public List<Drinks> GetDrinksList(string query)
         {
             List<Drinks> drinks = new List<Drinks>();
             IDbConnection conn = new DbAccess();
 
-            SqlCommand a = new SqlCommand(query, conn.GetConnection());
-            SqlDataReader dr = a.ExecuteReader();
-
-            while (dr.Read())
+            using (SqlCommand a = new SqlCommand(query, conn.GetConnection()))
             {
-                Drinks drink = new Drinks(
-                   dr.GetInt32(dr.GetOrdinal("DrinkId")), // Get IngredientId as int
-                   dr.GetString(dr.GetOrdinal("DrinkName")), // Get IngredientName as string
-                   dr.GetInt32(dr.GetOrdinal("DrinkPrice")) // Get IngredientStock as string
-                 );
+                SqlDataReader dr = a.ExecuteReader();
+                while (dr.Read())
+                {
+                    Drinks drink = new Drinks(
+                       dr.GetInt32(dr.GetOrdinal("DrinkId")), // Get IngredientId as int
+                       dr.GetString(dr.GetOrdinal("DrinkName")), // Get IngredientName as string
+                       dr.GetInt32(dr.GetOrdinal("DrinkPrice"))// Get IngredientStock as string
+                     );
 
-                // Add the Ingredients object to the list
-                drinks.Add(drink);
+                    // Add the Ingredients object to the list
+                    drinks.Add(drink);
+
+                    
+                }
+
             }
+
+            return drinks;
+        }
+
+        public List<Drinks> GetDrinksIngredientsList(string query, List<Ingredients> ingredients)
+        {
+            List<Drinks> drinks = GetDrinksList(Constant.selectDrinksQuery);
+            IDbConnection conn = new DbAccess();
+
+            //SqlCommand a = new SqlCommand(query, conn.GetConnection());
+            using (SqlCommand a = new SqlCommand(query, conn.GetConnection()))
+            {
+                SqlDataReader dr = a.ExecuteReader();
+                while (dr.Read())
+                {
+                    foreach (var drink in drinks)
+                    {
+                        if (drink.DrinkId == dr.GetInt32(dr.GetOrdinal("DrinkId")))
+                        {
+                            int CurrentIngredientId = dr.GetInt32(dr.GetOrdinal("IngredientId"));
+                            foreach (Ingredients ingredient in ingredients)
+                            {
+                                if(ingredient.IngredientId == CurrentIngredientId)
+                                {
+                                    drink.IngredientsList.Add(ingredient);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+                
             return drinks;
 
         }
 
-        //public List<DrinksIngredients> GetDrinksIngredientsList(string query)
-        //{
-        //    List<DrinksIngredients> drinksIngredients = new List<DrinksIngredients>();
-        //    IDbConnection conn = new DbAccess();
-
-        //    SqlCommand a = new SqlCommand(query, conn.GetConnection());
-        //    SqlDataReader dr = a.ExecuteReader();
-
-        //    while (dr.Read())
-        //    {
-        //        DrinksIngredients drinkIngredient = new DrinksIngredients(
-        //           dr.GetInt32(dr.GetOrdinal("DrinkId")), // Get IngredientId as int
-        //           dr.GetInt32(dr.GetOrdinal("IngredientId")) // Get IngredientId as int
-        //         );
-
-        //         Add the Ingredients object to the list
-        //        drinksIngredients.Add(drinkIngredient);
-        //    }
-        //    return drinksIngredients;
-
-        //}
+        public List<Drinks> GetFullDrinksList()
+        {
+            List<Drinks> drinks = GetDrinksIngredientsList(Constant.selectDrinksIngredientsQuery, GetIngredientsList(Constant.selectIngredientsQuery));
+            return drinks;
+        }
 
 
         //returns drink price (int) -- now redundant with drink obj

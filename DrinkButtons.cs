@@ -13,9 +13,15 @@ namespace VendingMachineAssignment
     {
 
         //removes one from the 
-        public void TakeDrinkIngredients(string removeIngredients, List<DrinksIngredients> drinksIngredients, List<Ingredients> ingredients)
+        public void TakeDrinkIngredients(string removeIngredients, List<Ingredients> ingredients)
         {
-            
+            foreach (var ingredient in ingredients)
+            {
+                if (ingredient.IngredientName == removeIngredients)
+                {
+                    ingredient.IngredientStock -= 1;
+                }
+            }
         }
         
         //retrieves drink price
