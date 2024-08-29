@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using VendingMachineAssignment.Business_Logic_Layer;
 
 namespace VendingMachineAssignment
 {
@@ -12,34 +13,27 @@ namespace VendingMachineAssignment
     {
 
         //removes one from the 
-        public void TakeDrinkIngredients(string removeIngredients)
+        public void TakeDrinkIngredients(string removeIngredients, List<DrinksIngredients> drinksIngredients, List<Ingredients> ingredients)
         {
-            IDbConnection conn = new DbAccess();
-            conn.WriteDatabase($"UPDATE Ingredients SET IngredientStock = IngredientStock - 1 WHERE IngredientName = '{removeIngredients}'");
+            
         }
         
         //retrieves drink price
-        public bool PurchaseDrink(string drink,ref int balance)
+        public bool PurchaseDrink(string drinkSelected,ref int balance, List<Drinks> drinks)
         {
-            int drinkPrice;
-            IDbConnection a = new DbAccess();
-            drinkPrice = a.GetDrinkPrice(drink);
+            bool canPurchase = false;
 
-            if (balance >= drinkPrice)
+            foreach(var drink in drinks)
             {
-                balance -= drinkPrice;
-                return true;
-            }
-            else
-            {
-                return false;
+                if (drink.DrinkName == drinkSelected && drink.DrinkPrice <= balance)
+                {
+                    balance -= drink.DrinkPrice;
+                    canPurchase = true;
+                }
             }
 
-
-
-
+            return canPurchase;
         }
-
 
 
     }

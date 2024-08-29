@@ -20,20 +20,39 @@ namespace VendingMachineAssignment
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
             IDbConnection conn = new DbAccess();
-            //List<Drinks> a = conn.GetDrinksList("SELECT * FROM Drinks");
+
+            //print objects in drinks list
+            //List<Drinks> a = conn.GetDrinksList(Constant.selectDrinksQuery);
             //foreach (var drink in a)
             //{
             //    MessageBox.Show($"{drink.DrinkName}, {drink.DrinkId}, {drink.DrinkPrice}");
             //}
-            DataTable Table = conn.ReadDatabaseRow("SELECT * FROM Ingredients WHERE IngredientId = 1");
 
-            foreach (DataRow dataRow in Table.Rows)
-            {
-                foreach (var item in dataRow.ItemArray)
-                {
-                    Console.WriteLine(item);
-                }
-            }
+            //print objects in ingredients list
+            //List<Ingredients> b = conn.GetIngredientsList(Constant.selectIngredientsQuery);
+            //foreach (var ingredient in b)
+            //{
+            //    MessageBox.Show($"{ingredient.IngredientId}, {ingredient.IngredientName}, {ingredient.IngredientStock}");
+            //}
+
+            //print objects in drinksingredients list
+            //List<DrinksIngredients> c = conn.GetDrinksIngredientsList(selectDrinksIngredientsQuery);
+            //foreach (var drinksIngredients in c)
+            //{
+            //    MessageBox.Show($"{drinksIngredients.DrinkId}, {drinksIngredients.IngredientId}");
+            //}
+
+
+            //testing readdatabaserow
+            //DataTable Table = conn.ReadDatabaseRow("SELECT * FROM Ingredients WHERE IngredientId = 1");
+
+            //foreach (DataRow dataRow in Table.Rows)
+            //{
+            //    foreach (var item in dataRow.ItemArray)
+            //    {
+            //        Console.WriteLine(item);
+            //    }
+            //}
 
         }
     }

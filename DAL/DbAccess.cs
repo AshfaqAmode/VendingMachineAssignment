@@ -16,11 +16,13 @@ namespace VendingMachineAssignment
     {
         SqlConnection GetConnection();
         void CloseConnection();
+        void CloseConnectionNew(SqlConnection connection);
         void WriteDatabase(string query);
         int ReadDatabaseField(string query);
         DataTable ReadDatabaseRow(string query);
         List<Ingredients> GetIngredientsList(string query);
-        List<Drinks> GetDrinksList(string _selectDrinks);
+        List<Drinks> GetDrinksList(string query);
+        //List<DrinksIngredients> GetDrinksIngredientsList(string query);
         int GetDrinkPrice(string a);
         int ReturnStockAmount(string a);
         int CheckStockAmount();
@@ -51,8 +53,8 @@ namespace VendingMachineAssignment
             connection.Open();
             connection.Close();
         }
-        /*
-        public void CloseConnection(SqlConnection connection)
+        
+        public void CloseConnectionNew(SqlConnection connection)
         {
             if (connection != null && connection.State == System.Data.ConnectionState.Open)
             {
@@ -67,7 +69,7 @@ namespace VendingMachineAssignment
                 }
             }
         }
-        */
+        
         
         //uses SqlCommand to update the database depending on parameter (query)
         public void WriteDatabase(string query)
@@ -83,8 +85,9 @@ namespace VendingMachineAssignment
                 {
                     MessageBox.Show("Error writing to database: " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
+                CloseConnectionNew(conn);
             }
+            
         }
 
         //Created ReadDatabase function
@@ -125,6 +128,7 @@ namespace VendingMachineAssignment
                     MessageBox.Show("Error writing to database: " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return dt;
                 }
+                
             }
         }
 
@@ -135,7 +139,7 @@ namespace VendingMachineAssignment
 
             SqlCommand a = new SqlCommand(query, conn.GetConnection());
             SqlDataReader dr = a.ExecuteReader();
-
+            
             while (dr.Read())
             {
                 Ingredients ingredient = new Ingredients(
@@ -150,17 +154,20 @@ namespace VendingMachineAssignment
             return ingredients;
         }
 
-        public void UpdateIngredientsList(List<Ingredients> ingredients)
-        {
+        //public void UpdateIngredientsList(List<Ingredients> ingredients,string drinkName)
+        //{
+        //    foreach (Ingredients ingredient in ingredients)
+        //    {
+                
+        //    }
+        //}
 
-        }
-
-        public List<Drinks> GetDrinksList(string _selectDrinks)
+        public List<Drinks> GetDrinksList(string query)
         {
             List<Drinks> drinks = new List<Drinks>();
             IDbConnection conn = new DbAccess();
 
-            SqlCommand a = new SqlCommand(_selectDrinks, conn.GetConnection());
+            SqlCommand a = new SqlCommand(query, conn.GetConnection());
             SqlDataReader dr = a.ExecuteReader();
 
             while (dr.Read())
@@ -178,8 +185,30 @@ namespace VendingMachineAssignment
 
         }
 
+        //public List<DrinksIngredients> GetDrinksIngredientsList(string query)
+        //{
+        //    List<DrinksIngredients> drinksIngredients = new List<DrinksIngredients>();
+        //    IDbConnection conn = new DbAccess();
 
-        //returns drink price (int)
+        //    SqlCommand a = new SqlCommand(query, conn.GetConnection());
+        //    SqlDataReader dr = a.ExecuteReader();
+
+        //    while (dr.Read())
+        //    {
+        //        DrinksIngredients drinkIngredient = new DrinksIngredients(
+        //           dr.GetInt32(dr.GetOrdinal("DrinkId")), // Get IngredientId as int
+        //           dr.GetInt32(dr.GetOrdinal("IngredientId")) // Get IngredientId as int
+        //         );
+
+        //         Add the Ingredients object to the list
+        //        drinksIngredients.Add(drinkIngredient);
+        //    }
+        //    return drinksIngredients;
+
+        //}
+
+
+        //returns drink price (int) -- now redundant with drink obj
         public int GetDrinkPrice(string drink)
         {
             IDbConnection conn = new DbAccess();
@@ -197,32 +226,33 @@ namespace VendingMachineAssignment
 
         }
 
-        //return stock amount
-        public int ReturnStockAmount(string a)
+        //return stock amount -- now redundant with ingrdient object
+        public int ReturnIngredientStockAmount(string a)
         {
             IDbConnection conn = new DbAccess();
             conn.GetConnection();
             string query = $"SELECT IngredientStock FROM Ingredients WHERE IngredientName = '{a}'";
 
-            SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-            SqlDataReader rdr = cmd.ExecuteReader();
-
-            if (rdr.Read())
+            using (SqlCommand cmd = new SqlCommand(query, conn.GetConnection()))
             {
-                int data = rdr.GetInt32(0);
-                conn.CloseConnection();
-                return data;
+                SqlDataReader rdr = cmd.ExecuteReader();
 
+                if (rdr.Read())
+                {
+                    int data = rdr.GetInt32(0);
+                    return data;
+                }
+                else
+                {
+                    MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    conn.CloseConnection();
+                    return 0;
+                }
             }
-            else
-            {
-                MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                conn.CloseConnection();
-                return 0;
-            }
+            
         }
 
-        //
+        //now redundant with ingredient obj
         public int CheckStockAmount()
         {
             IDbConnection conn = new DbAccess();
@@ -244,6 +274,10 @@ namespace VendingMachineAssignment
             }
         }
 
+        public int ReturnStockAmount(string a)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

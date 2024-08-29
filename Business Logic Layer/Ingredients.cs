@@ -25,5 +25,7 @@ namespace VendingMachineAssignment.Business_Logic_Layer
         public string IngredientName { get => _ingredientName; set => _ingredientName = value; }
         public int IngredientStock { get => _ingredientStock; set => _ingredientStock = value; }
 
+
+
     }
 }
