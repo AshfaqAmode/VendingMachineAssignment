@@ -20,24 +20,24 @@ namespace VendingMachineAssignment
         public int ReturnStockAmount(string a)
         {
             IDbConnection conn = new DbAccess();
-            conn.GetConnection();
             string query = $"SELECT IngredientStock FROM Ingredients WHERE IngredientName = '{a}'";
 
-            SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-            SqlDataReader rdr = cmd.ExecuteReader();
-
-            if (rdr.Read())
+            //SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
+            using (SqlCommand cmd = new SqlCommand(query, conn.GetConnection()))
             {
-                int data = rdr.GetInt32(0);
-                conn.CloseConnection();
-                return data;
+                SqlDataReader rdr = cmd.ExecuteReader();
+                if (rdr.Read())
+                {
+                    int data = rdr.GetInt32(0);
+                    return data;
 
-            }
-            else
-            {
-                MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                conn.CloseConnection();
-                return 0;
+                }
+                else
+                {
+                    MessageBox.Show("Unable to read stock amount", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return 0;
+                }
+
             }
         }
 

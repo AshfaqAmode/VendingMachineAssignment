@@ -21,7 +21,6 @@ namespace VendingMachineAssignment
         List<Ingredients> GetIngredientsList(string query);
         List<Drinks> GetFullDrinksList(string query);
         int ReturnStockAmount(string a);
-        int CheckStockAmount();
 
     }
 
@@ -146,27 +145,6 @@ namespace VendingMachineAssignment
             return drinks;
         }
 
-        //now redundant with ingredient obj
-        public int CheckStockAmount()
-        {
-            IDbConnection conn = new DbAccess();
-            conn.GetConnection();
-            string query = $"SELECT IngredientStock FROM Ingredients";
-            SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-            SqlDataReader rdr = cmd.ExecuteReader();
-
-            try
-            {
-                rdr.Read();
-                int data = rdr.GetInt32(0);
-                return data;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"{ex}");
-                return 0;
-            }
-        }
 
         public int ReturnStockAmount(string a)
         {

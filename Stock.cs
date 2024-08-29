@@ -15,7 +15,6 @@ namespace VendingMachineAssignment
         {
             IDbConnection conn = new DbAccess();
             conn.WriteDatabase("UPDATE Ingredients SET IngredientStock = IngredientStock + 10");
-            conn.CloseConnection();
         }
 
         public void CheckStock()
