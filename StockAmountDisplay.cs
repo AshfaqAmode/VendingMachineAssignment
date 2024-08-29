@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using VendingMachineAssignment.Business_Logic_Layer;
 
 namespace VendingMachineAssignment
 {
@@ -19,7 +20,7 @@ namespace VendingMachineAssignment
         //returns stock amount of specified ingredient
         public int ReturnStockAmount(string a)
         {
-            IDbConnection conn = new DbAccess();
+            IDbConnection conn = new DbOperations();
             string query = $"SELECT IngredientStock FROM Ingredients WHERE IngredientName = '{a}'";
 
             //SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
@@ -41,179 +42,13 @@ namespace VendingMachineAssignment
             }
         }
 
-        public bool CheckStockAmount()
+        public bool CheckStockAmount(List<Ingredients> ingredientList)
         {
-            IDbConnection conn = new DbAccess();
-            int data;
-            data = conn.ReadDatabaseRecord($"SELECT IngredientStock FROM Ingredients");
-            if ( data > 0)
-            {
-                MessageBox.Show($"{data}");
-                return true;
-            }
-            else
-            {
-                MessageBox.Show("One or more items need to be restocked!" + data);
-                return false;
-            }
+            bool stockMissing = false;
+
+            stockMissing =  ingredientList.Any(ingredient => ingredient.IngredientStock <= 0);
+
+            return stockMissing;
         }
     }
-
-   //Previous implementation (inefficient) so changed to one function where ingredient name is passed as param
-
-    //interface IStockDisplay
-    //{
-    //    int ShowData();
-    //}
-
-    //internal class TeaStockDisplay : IStockDisplay
-    //{
-    //    public int ShowData()
-    //    {
-    //        IDbConnection conn = new DbConnection();
-    //        conn.GetConnection();
-    //        string query = "SELECT IngredientStock FROM Ingredients WHERE IngredientName = 'Tea'";
-
-    //        SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-    //        SqlDataReader rdr = cmd.ExecuteReader();
-
-    //        if (rdr.Read())
-    //        {
-    //            int data = rdr.GetInt32(0);
-
-    //            conn.CloseConnection();
-    //            return data;
-
-    //        }
-    //        else
-    //        {
-    //            Console.WriteLine("did not read");
-
-    //            conn.CloseConnection();
-    //            return 0;
-    //        }
-    //    }
-    //}
-
-    //internal class MilkStockDisplay : IStockDisplay
-    //{
-    //    public int ShowData()
-    //    {
-    //        IDbConnection conn = new DbConnection();
-    //        conn.GetConnection();
-    //        string query = "SELECT IngredientStock FROM Ingredients WHERE IngredientName = 'Milk'";
-
-    //        SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-    //        SqlDataReader rdr = cmd.ExecuteReader();
-
-    //        if (rdr.Read())
-    //        {
-    //            int data = rdr.GetInt32(0);
-
-    //            conn.CloseConnection();
-    //            return data;
-
-    //        }
-    //        else
-    //        {
-    //            Console.WriteLine("did not read");
-
-    //            conn.CloseConnection();
-    //            return 0;
-    //        }
-    //    }
-    //}
-
-    //internal class CoffeeStockDisplay : IStockDisplay
-    //{
-    //    public int ShowData()
-    //    {
-    //        IDbConnection conn = new DbConnection();
-    //        conn.GetConnection();
-    //        string query = "SELECT IngredientStock FROM Ingredients WHERE IngredientName = 'Coffee'";
-
-    //        SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-    //        SqlDataReader rdr = cmd.ExecuteReader();
-
-    //        if (rdr.Read())
-    //        {
-    //            int data = rdr.GetInt32(0);
-
-    //            conn.CloseConnection();
-    //            return data;
-
-    //        }
-    //        else
-    //        {
-    //            Console.WriteLine("did not read");
-
-    //            conn.CloseConnection();
-    //            return 0;
-    //        }
-    //    }
-    //}
-
-    //internal class ChocolateStockDisplay : IStockDisplay
-    //{
-    //    public int ShowData()
-    //    {
-    //        IDbConnection conn = new DbConnection();
-    //        conn.GetConnection();
-    //        string query = "SELECT IngredientStock FROM Ingredients WHERE IngredientName = 'Chocolate'";
-
-    //        SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-    //        SqlDataReader rdr = cmd.ExecuteReader();
-
-    //        if (rdr.Read())
-    //        {
-    //            int data = rdr.GetInt32(0);
-
-    //            conn.CloseConnection();
-    //            return data;
-
-    //        }
-    //        else
-    //        {
-    //            Console.WriteLine("did not read");
-
-    //            conn.CloseConnection();
-    //            return 0;
-    //        }
-    //    }
-    //}
-
-    //internal class SugarStockDisplay : IStockDisplay
-    //{
-    //    public int ShowData()
-    //    {
-    //        IDbConnection conn = new DbConnection();
-    //        conn.GetConnection();
-    //        string query = "SELECT IngredientStock FROM Ingredients WHERE IngredientName = 'Sugar'";
-
-    //        SqlCommand cmd = new SqlCommand(query, conn.GetConnection());
-    //        SqlDataReader rdr = cmd.ExecuteReader();
-
-    //        if (rdr.Read())
-    //        {
-    //            int data = rdr.GetInt32(0);
-    //            conn.CloseConnection();
-    //            return data;
-
-    //        }
-    //        else
-    //        {
-    //            Console.WriteLine("did not read");
-
-    //            conn.CloseConnection();
-    //            return 0;
-    //        }
-    //    }
-    //}
-
-
-
-
-
-
-
 }

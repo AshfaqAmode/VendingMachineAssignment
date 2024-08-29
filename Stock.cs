@@ -13,7 +13,7 @@ namespace VendingMachineAssignment
         //adds 10 to all ingredients
         public void RestockAll()
         {
-            IDbConnection conn = new DbAccess();
+            IDbConnection conn = new DbOperations();
             conn.WriteDatabase("UPDATE Ingredients SET IngredientStock = IngredientStock + 10");
         }
 

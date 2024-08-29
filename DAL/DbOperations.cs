@@ -24,9 +24,9 @@ namespace VendingMachineAssignment
     }
 
 
-    public class DbAccess : IDbConnection
+    public class DbOperations : IDbConnection
     {
-        //DB open and close with exception ahndling
+        //DB open and close with exception handling
         public SqlConnection GetConnection()
         {
             SqlConnection connection = new SqlConnection(Constant.connectionString);
@@ -85,7 +85,7 @@ namespace VendingMachineAssignment
         public List<Ingredients> GetIngredientsList(string query)
         {
             List<Ingredients> ingredients = new List<Ingredients>();
-            IDbConnection conn = new DbAccess();
+            IDbConnection conn = new DbOperations();
 
             using (SqlCommand a = new SqlCommand(query, conn.GetConnection()))
             {
@@ -111,7 +111,7 @@ namespace VendingMachineAssignment
         {
             List<Drinks> drinks = new List<Drinks> ();
 
-            IDbConnection conn = new DbAccess();
+            IDbConnection conn = new DbOperations();
             using (SqlCommand a = new SqlCommand(query, conn.GetConnection()))
             {
                 SqlDataReader dr = a.ExecuteReader();

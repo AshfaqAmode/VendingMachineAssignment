@@ -61,7 +61,7 @@ namespace VendingMachineAssignment
         {
             ButtonControl.DisableAllControls(this);
             DrinkButtons a = new DrinkButtons();
-            IDbConnection conn = new DbAccess();
+            IDbConnection conn = new DbOperations();
             List<Drinks> drinks = conn.GetFullDrinksList(Constant.selectLeftJoinDrinksIngredientsQuery);
 
             if (a.PurchaseDrink($"{currentDrink}", ref balance, drinks))
