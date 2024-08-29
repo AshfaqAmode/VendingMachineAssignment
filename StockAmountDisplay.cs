@@ -9,12 +9,12 @@ using VendingMachineAssignment.Business_Logic_Layer;
 
 namespace VendingMachineAssignment
 {
-    interface IStockDisplay
+    interface IStockOperations
     {
-        int ReturnStockAmount(string a);
+        bool CheckStockAmount(List<Ingredients> ingredientList);
     }
 
-    internal class DisplayStock 
+    internal class StockOperations : IStockOperations
     {
         public bool CheckStockAmount(List<Ingredients> ingredientList)
         {

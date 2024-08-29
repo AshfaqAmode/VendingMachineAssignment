@@ -33,7 +33,7 @@ namespace VendingMachineAssignment
         //enters loaded data values from the db into stock boxes
         public void PopulateStock()
         {
-            var stockObj = new DisplayStock();
+            var stockObj = new StockOperations();
 
             TeaStockTextBox.Text = $"{stockObj.ReturnStockAmount("Tea")}";
             SugarStockTextBox.Text = $"{stockObj.ReturnStockAmount("Sugar")}";
@@ -115,7 +115,7 @@ namespace VendingMachineAssignment
         private void Form1_Load(object sender, EventArgs e)
         {
             PopulateStock();
-            var sam = new DisplayStock();
+            var sam = new StockOperations();
             sam.CheckStockAmount();
         }
 
