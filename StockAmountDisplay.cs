@@ -12,10 +12,12 @@ namespace VendingMachineAssignment
     interface IStockOperations
     {
         bool CheckStockAmount(List<Ingredients> ingredientList);
+        void RemoveStock(string selectedDrink, List<Ingredients> ingredientList, List<Drinks> drinkList);
     }
 
     internal class StockOperations : IStockOperations
     {
+        //check if any stock is 0 or less
         public bool CheckStockAmount(List<Ingredients> ingredientList)
         {
             bool stockMissing = false;
@@ -25,6 +27,7 @@ namespace VendingMachineAssignment
             return stockMissing;
         }
 
+        //removes one from the stock of ingredients... ingredients identified by ingredientId list in drink obj
         public void RemoveStock(string selectedDrink, List<Ingredients> ingredientList, List<Drinks> drinkList)
         {
             var drink = drinkList.FirstOrDefault(d => d.DrinkName == selectedDrink);
@@ -43,5 +46,7 @@ namespace VendingMachineAssignment
                 }
             }
         }
+
+
     }
 }
