@@ -17,11 +17,9 @@ namespace VendingMachineAssignment
     {
         SqlConnection GetConnection();
         void WriteDatabase(string query);
-        int ReadDatabaseField(string query);
-        DataTable ReadDatabaseRow(string query);
+        int ReadDatabaseRecord(string query);
         List<Ingredients> GetIngredientsList(string query);
         List<Drinks> GetFullDrinksList(string query);
-        int GetDrinkPrice(string a);
         int ReturnStockAmount(string a);
         int CheckStockAmount();
 
@@ -65,8 +63,8 @@ namespace VendingMachineAssignment
             
         }
 
-        //Created ReadDatabase function
-        public int ReadDatabaseField(string query)
+        //reads a record from database
+        public int ReadDatabaseRecord(string query)
         {
             using (SqlConnection conn = GetConnection())
             {
@@ -85,28 +83,7 @@ namespace VendingMachineAssignment
             }
         }
 
-        public DataTable ReadDatabaseRow(string query)
-        {
-            DataTable dt = new DataTable();
-            SqlDataAdapter adapter = new SqlDataAdapter();
-
-            using (SqlConnection conn = GetConnection())
-            {
-                adapter.SelectCommand = new SqlCommand(query, conn);
-                try
-                {
-                    adapter.Fill(dt);
-                    return dt;
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("Error writing to database: " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return dt;
-                }
-                
-            }
-        }
-
+        //populates a list(type ingredients) from ingredients table
         public List<Ingredients> GetIngredientsList(string query)
         {
             List<Ingredients> ingredients = new List<Ingredients>();
@@ -131,6 +108,7 @@ namespace VendingMachineAssignment
             return ingredients;
         }
 
+        //populates a list(type drinks) from drinks table left join drinksIngredients table to get the ingredients for each drink
         public List<Drinks> GetFullDrinksList(string query)
         {
             List<Drinks> drinks = new List<Drinks> ();

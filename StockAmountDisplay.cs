@@ -45,7 +45,7 @@ namespace VendingMachineAssignment
         {
             IDbConnection conn = new DbAccess();
             int data;
-            data = conn.ReadDatabaseField($"SELECT IngredientStock FROM Ingredients");
+            data = conn.ReadDatabaseRecord($"SELECT IngredientStock FROM Ingredients");
             if ( data > 0)
             {
                 MessageBox.Show($"{data}");
