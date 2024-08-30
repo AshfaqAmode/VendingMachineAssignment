@@ -13,19 +13,25 @@ namespace VendingMachineAssignment
     {
 
         //removes one from the ingredient object's stock, then updates database.
-        public void TakeDrinkIngredients(string drinkSelected, List<Drinks> drinksList)
+        public void TakeDrinkIngredients(string drinkSelected, List<Drinks> drinksList, List<Ingredients> ingredientsList)
         {
             IDbOperations conn = new DbOperations();
 
-            foreach (var ingredient in ingredientsList)
+            var drink = drinksList.FirstOrDefault(d => d.DrinkName == drinkSelected);
+            var ingredientsNeeded = drink.IngredientId;
+
+            if (drink != null)
             {
-                if (ingredient.IngredientName == removeIngredients)
+                foreach (var ingredientId in ingredientsNeeded)
                 {
-                    ingredient.IngredientStock -= 1;
-                    ingredient.Changed = true;
+                    var ingredient = ingredientsList.FirstOrDefault(i => i.IngredientId == ingredientId);
+                    if (ingredient != null)
+                    {
+                        ingredient.IngredientStock -= 1;
+                        ingredient.Changed = true;
+                    }
                 }
             }
-
             conn.UpdateIngredientStockDB(ingredientsList);
         }
 
@@ -35,7 +41,7 @@ namespace VendingMachineAssignment
         {
             bool canPurchase = false;
 
-            foreach(var drink in drinks)
+            foreach(var drink in drinksList)
             {
                 if (drink.DrinkName == drinkSelected && drink.DrinkPrice <= balance)
                 {

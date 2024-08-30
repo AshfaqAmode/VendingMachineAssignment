@@ -23,7 +23,10 @@ namespace VendingMachineAssignment
         {
             bool stockMissing = false;
 
-            stockMissing =  ingredientList.Any(ingredient => ingredient.IngredientStock <= 0);
+            if( ingredientList.Any(ingredient => ingredient.IngredientStock <= 0))
+            {
+                stockMissing = true;
+            }
 
             return stockMissing;
         }
@@ -48,8 +51,9 @@ namespace VendingMachineAssignment
                     }
                 }
             }
-            
-            
+            conn.UpdateIngredientStockDB(ingredientList);
+
+
         }
 
 

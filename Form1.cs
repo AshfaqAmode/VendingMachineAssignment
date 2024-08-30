@@ -27,12 +27,11 @@ namespace VendingMachineAssignment
         {
             IDbOperations conn = new DbOperations();
             ingredientsList = conn.GetIngredientsList(Constant.selectIngredientsQuery);
-
-            TeaStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Tea").Select(i => i.IngredientStock)}";
-            SugarStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Sugar").Select(i => i.IngredientStock)}";
-            MilkStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Milk").Select(i => i.IngredientStock)}";
-            ChocolateStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Chocolate").Select(i => i.IngredientStock)}";
-            CoffeeStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Coffee").Select(i => i.IngredientStock)}";
+            TeaStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Tea").Select(i => i.IngredientStock).First()}";
+            SugarStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Sugar").Select(i => i.IngredientStock).First()}";
+            MilkStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Milk").Select(i => i.IngredientStock).First()}";
+            ChocolateStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Chocolate").Select(i => i.IngredientStock).First()}";
+            CoffeeStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Coffee").Select(i => i.IngredientStock).First()}";
             AmountTextBox.Text = $"{balance}";
         }
 
@@ -50,6 +49,34 @@ namespace VendingMachineAssignment
             }
         }
 
+        public async void MakeDrink(string selectedDrink, List<Ingredients> ingredientList, List<Drinks> drinkList)
+        {
+            IDbOperations conn = new DbOperations();
+            var drink = drinkList.FirstOrDefault(d => d.DrinkName == selectedDrink);
+            var ingredientsNeeded = drink.IngredientId;
+
+            if (drink != null)
+            {
+                foreach (var ingredientId in ingredientsNeeded)
+                {
+                    var ingredient = ingredientList.FirstOrDefault(i => i.IngredientId == ingredientId);
+                    if (ingredient != null)
+                    {
+                        LogTextBox.AppendText($"> Adding {ingredient.IngredientName}..." + Environment.NewLine);
+                        await Task.Delay(2000);
+
+                        ingredient.IngredientStock -= 1;
+                        PopulateStock(ingredientsList);
+                        
+                        ingredient.Changed = true;
+                    }
+                }
+            }
+            conn.UpdateIngredientStockDB(ingredientList);
+
+
+        }
+
         private async void DrinkSelected(string currentDrink)
         {
             ButtonControl.DisableAllControls(this);
@@ -58,26 +85,12 @@ namespace VendingMachineAssignment
 
             if (a.PurchaseDrink($"{currentDrink}", ref balance, drinksList))
             {
+
                 LogTextBox.AppendText(Environment.NewLine + $"> {currentDrink} selected" + Environment.NewLine);
                 await Task.Delay(500);
 
-                for (int i = 0; i < drinksAndIngredients.GetLength(0); i++)
-                {
-                    string drink = drinksAndIngredients[i, 0];
-                    for (int j = 1; j < drinksAndIngredients.GetLength(1); j++)
-                    {
-                        if (drink == currentDrink)
-                        {
-                            if (!(drinksAndIngredients[i, j] == ""))
-                            {
-                                LogTextBox.AppendText($"> Adding {drinksAndIngredients[i, j]}..." + Environment.NewLine);
-                                //a.TakeDrinkIngredients($"{drinksAndIngredients[i, j]}");
-                                PopulateStock(ingredientsList);
-                                await Task.Delay(2000);
-                            }
-                        }
-                    }
-                }
+                MakeDrink(currentDrink, ingredientsList, drinksList);
+
                 SugarChoice();
 
                 LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
