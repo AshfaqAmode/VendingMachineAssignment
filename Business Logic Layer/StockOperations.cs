@@ -12,7 +12,6 @@ namespace VendingMachineAssignment
     interface IStockOperations
     {
         bool CheckStockAmount(List<Ingredients> ingredientList);
-        void RemoveStock(string selectedDrink, List<Ingredients> ingredientList, List<Drinks> drinkList);
         void RestockAll(List<Ingredients> ingredientsList);
     }
 
@@ -30,32 +29,6 @@ namespace VendingMachineAssignment
 
             return stockMissing;
         }
-
-
-        //removes one from the stock of ingredients... ingredients identified by ingredientId list in drink obj
-        public void RemoveStock(string selectedDrink, List<Ingredients> ingredientList, List<Drinks> drinkList)
-        {
-            IDbOperations conn = new DbOperations();
-            var drink = drinkList.FirstOrDefault(d => d.DrinkName == selectedDrink);
-            var ingredientsNeeded = drink.IngredientId;
-
-            if (drink != null)
-            {
-                foreach (var ingredientId in ingredientsNeeded)
-                {
-                    var ingredient = ingredientList.FirstOrDefault(i => i.IngredientId == ingredientId);
-                    if (ingredient != null)
-                    {
-                        ingredient.IngredientStock -= 1;
-                        ingredient.Changed = true;
-                    }
-                }
-            }
-            conn.UpdateIngredientStockDB(ingredientList);
-
-
-        }
-
 
         //adds 10 to all ingredients then update database
         public void RestockAll(List<Ingredients> ingredientsList)

@@ -10,9 +10,7 @@ using VendingMachineAssignment.Business_Logic_Layer;
 namespace VendingMachineAssignment
 {
     internal class DrinkOperations
-    {
-
-        
+    {        
         //checks if user can afford the drinkSelected, then removes its price from the balance
         public bool PurchaseDrink(string drinkSelected,ref int balance, List<Drinks> drinksList)
         {
