@@ -37,8 +37,7 @@ namespace VendingMachineAssignment
 
             if (drinkToPurchase != null && balance >= drinkToPurchase.DrinkPrice)
             {
-                // Deduct the price from the balance
-                balance -= drinkToPurchase.DrinkPrice;
+                hasBalance = true;
                 return hasBalance;
             }
             else
@@ -62,6 +61,18 @@ namespace VendingMachineAssignment
             }
 
             return hasStock;
+        }
+
+        public int PayDrink(int drinkId, int balance, List<Drinks> drinksList)
+        {
+            var drinkToPurchase = drinksList.FirstOrDefault(drink => drink.DrinkId == drinkId);
+
+            if (drinkToPurchase != null && balance >= drinkToPurchase.DrinkPrice)
+            {
+                balance -= drinkToPurchase.DrinkPrice;
+            }
+
+            return balance;
         }
 
 
