@@ -32,6 +32,7 @@ namespace VendingMachineAssignment
         //removes one from the stock of ingredients... ingredients identified by ingredientId list in drink obj
         public void RemoveStock(string selectedDrink, List<Ingredients> ingredientList, List<Drinks> drinkList)
         {
+            IDbOperations conn = new DbOperations();
             var drink = drinkList.FirstOrDefault(d => d.DrinkName == selectedDrink);
             var ingredientsNeeded = drink.IngredientId;
 
@@ -47,6 +48,8 @@ namespace VendingMachineAssignment
                     }
                 }
             }
+            
+            
         }
 
 

@@ -13,7 +13,7 @@ namespace VendingMachineAssignment
     {
 
         //removes one from the ingredient object's stock, then updates database.
-        public void TakeDrinkIngredients(string removeIngredients, List<Ingredients> ingredientsList)
+        public void TakeDrinkIngredients(string drinkSelected, List<Drinks> drinksList)
         {
             IDbOperations conn = new DbOperations();
 
@@ -21,10 +21,7 @@ namespace VendingMachineAssignment
             {
                 if (ingredient.IngredientName == removeIngredients)
                 {
-                    LogTextBox.AppendText($"> Adding {ingredient.IngredientName}..." + Environment.NewLine);
                     ingredient.IngredientStock -= 1;
-                    PopulateStock(ingredientsList);
-                    await Task.Delay(2000);
                     ingredient.Changed = true;
                 }
             }
