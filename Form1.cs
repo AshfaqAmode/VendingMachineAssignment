@@ -18,28 +18,20 @@ namespace VendingMachineAssignment
     public partial class Form1 : Form
     {
         private int balance;
-        //IDbConnection conn = new DbAccess();
-        //List<Drinks> drinks = conn.GetDrinksList(Constant.selectDrinksQuery);
 
-        string[,] drinksAndIngredients = new string[,]
+        List<Ingredients> ingredientsList = new List<Ingredients>();
+        List<Drinks> drinksList = new List<Drinks>();
+
+        //enters loaded data values from the ingredient list into stock boxes
+        public void PopulateStock(List<Ingredients> ingredientsList)
         {
-            { "Tea", "Milk", "Tea", "" }, // Last column left empty for variable length
-            { "Cappuccino", "Milk", "Coffee", "" },
-            { "Mochaccino", "Milk", "Coffee", "Chocolate" },
-            { "Hot Chocolate", "Milk", "Chocolate", "" },
-            { "Milk", "Milk", "", "" }
-        };
-
-        //enters loaded data values from the db into stock boxes
-        public void PopulateStock()
-        {
-            var stockObj = new DisplayStock();
-
-            TeaStockTextBox.Text = $"{stockObj.ReturnStockAmount("Tea")}";
-            SugarStockTextBox.Text = $"{stockObj.ReturnStockAmount("Sugar")}";
-            MilkStockTextBox.Text = $"{stockObj.ReturnStockAmount("Milk")}";
-            ChocolateStockTextBox.Text = $"{stockObj.ReturnStockAmount("Chocolate")}";
-            CoffeeStockTextBox.Text = $"{stockObj.ReturnStockAmount("Coffee")}";
+            IDbOperations conn = new DbOperations();
+            ingredientsList = conn.GetIngredientsList(Constant.selectIngredientsQuery);
+            TeaStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Tea").Select(i => i.IngredientStock).First()}";
+            SugarStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Sugar").Select(i => i.IngredientStock).First()}";
+            MilkStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Milk").Select(i => i.IngredientStock).First()}";
+            ChocolateStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Chocolate").Select(i => i.IngredientStock).First()}";
+            CoffeeStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Coffee").Select(i => i.IngredientStock).First()}";
             AmountTextBox.Text = $"{balance}";
         }
 
@@ -49,43 +41,56 @@ namespace VendingMachineAssignment
         {
             if (!(WithoutSugarCheckBox.Checked))
             {
-                DrinkButtons a = new DrinkButtons();
+                DrinkOperations a = new DrinkOperations();
                 LogTextBox.AppendText($"> Adding Sugar..." + Environment.NewLine);
                 //a.TakeDrinkIngredients("Sugar");
-                PopulateStock();
+                PopulateStock(ingredientsList);
                 await Task.Delay(2000);
             }
+        }
+
+        public async void MakeDrink(string selectedDrink, List<Ingredients> ingredientList, List<Drinks> drinkList)
+        {
+            IDbOperations conn = new DbOperations();
+            var drink = drinkList.FirstOrDefault(d => d.DrinkName == selectedDrink);
+            var ingredientsNeeded = drink.IngredientId;
+
+            if (drink != null)
+            {
+                foreach (var ingredientId in ingredientsNeeded)
+                {
+                    var ingredient = ingredientList.FirstOrDefault(i => i.IngredientId == ingredientId);
+                    if (ingredient != null)
+                    {
+                        LogTextBox.AppendText($"> Adding {ingredient.IngredientName}..." + Environment.NewLine);
+                        await Task.Delay(2000);
+
+                        ingredient.IngredientStock -= 1;
+                        PopulateStock(ingredientsList);
+                        
+                        ingredient.Changed = true;
+                    }
+                }
+            }
+            conn.UpdateIngredientStockDB(ingredientList);
+
+
         }
 
         private async void DrinkSelected(string currentDrink)
         {
             ButtonControl.DisableAllControls(this);
-            DrinkButtons a = new DrinkButtons();
-            IDbConnection conn = new DbAccess();
-            List<Drinks> drinks = conn.GetDrinksList(Constant.selectDrinksQuery);
+            DrinkOperations a = new DrinkOperations();
+            IDbOperations conn = new DbOperations();
 
-            if (a.PurchaseDrink($"{currentDrink}", ref balance, drinks))
+            if (a.PurchaseDrink($"{currentDrink}", ref balance, drinksList))
             {
+
                 LogTextBox.AppendText(Environment.NewLine + $"> {currentDrink} selected" + Environment.NewLine);
                 await Task.Delay(500);
 
-                for (int i = 0; i < drinksAndIngredients.GetLength(0); i++)
-                {
-                    string drink = drinksAndIngredients[i, 0];
-                    for (int j = 1; j < drinksAndIngredients.GetLength(1); j++)
-                    {
-                        if (drink == currentDrink)
-                        {
-                            if (!(drinksAndIngredients[i, j] == ""))
-                            {
-                                LogTextBox.AppendText($"> Adding {drinksAndIngredients[i, j]}..." + Environment.NewLine);
-                                //a.TakeDrinkIngredients($"{drinksAndIngredients[i, j]}");
-                                PopulateStock();
-                                await Task.Delay(2000);
-                            }
-                        }
-                    }
-                }
+                MakeDrink(currentDrink, ingredientsList, drinksList);
+
                 SugarChoice();
 
                 LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
@@ -105,7 +110,6 @@ namespace VendingMachineAssignment
         }
 
 
-
         public Form1()
         {
             InitializeComponent();
@@ -114,24 +118,38 @@ namespace VendingMachineAssignment
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            PopulateStock();
-            var sam = new DisplayStock();
-            sam.CheckStockAmount();
+            IDbOperations conn = new DbOperations();
+            var sam = new StockOperations();
+
+            ingredientsList = conn.GetIngredientsList(Constant.selectIngredientsQuery);
+            drinksList = conn.GetFullDrinksList(Constant.selectLeftJoinDrinksIngredientsQuery);
+
+            PopulateStock(ingredientsList);
+
+            while (sam.CheckStockAmount(ingredientsList) == false)
+            {
+                LogTextBox.Text = $"> URGENT... Please restock!";
+                ButtonControl.DisableAllControls(this);
+                RestockButton.Enabled = true;
+            }
+
+
+            ;
         }
 
         private async void RestockButton_Click(object sender, EventArgs e)
         {
             //Restock function from restock class called so 10 added to all item stock
-            Stock restockObj = new Stock();
-            restockObj.RestockAll();
-
-            //Stock boxes populated again with updated stock
-            PopulateStock();
+            IStockOperations restockObj = new StockOperations();
+            restockObj.RestockAll(ingredientsList);
 
             //all buttons disabled for 3 sec while restocking
             ButtonControl.DisableAllControls(this);
             LogTextBox.Text = "> Restocking Items..." + Environment.NewLine;
             await Task.Delay(3000);
+
+            //Stock boxes populated again with updated stock
+            PopulateStock(ingredientsList);
 
             LogTextBox.AppendText("> All items restocked!" + Environment.NewLine);
             ButtonControl.EnableAllControls(this);
@@ -159,7 +177,7 @@ namespace VendingMachineAssignment
 
                     LogTextBox.AppendText($"> Balance: {balance}" + Environment.NewLine);
                     ButtonControl.EnableAllControls(this);
-                    PopulateStock();
+                    PopulateStock(ingredientsList);
                 }
 
             }

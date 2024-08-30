@@ -19,7 +19,7 @@ namespace VendingMachineAssignment
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
-            IDbConnection conn = new DbAccess();
+            IDbOperations conn = new DbOperations();
 
 
             //List<Ingredients> b = conn.GetIngredientsList(Constant.selectIngredientsQuery);
@@ -32,7 +32,7 @@ namespace VendingMachineAssignment
 
                 foreach (int ingredientId in drink.IngredientId)
                 {
-                    ingredientidconcat = ingredientidconcat + ingredientId.ToString();
+                    ingredientidconcat = ingredientidconcat + ", " + ingredientId.ToString();
                 }
 
                 MessageBox.Show($"{drink.DrinkName}, {drink.DrinkId}, {drink.DrinkPrice}, {ingredientidconcat}");
