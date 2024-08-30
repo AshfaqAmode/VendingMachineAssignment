@@ -50,10 +50,10 @@ namespace VendingMachineAssignment
             }
         }
 
-        public async void MakeDrink(string selectedDrink, List<Ingredients> ingredientList, List<Drinks> drinkList)
+        public async void AssembleDrink(int drinkId, List<Ingredients> ingredientList, List<Drinks> drinkList)
         {
             IDbOperations conn = new DbOperations();
-            var drink = drinkList.FirstOrDefault(d => d.DrinkName == selectedDrink);
+            var drink = drinkList.FirstOrDefault(d => d.DrinkId == drinkId);
             var ingredientsNeeded = drink.IngredientIds;
 
             if (drink != null)
@@ -67,9 +67,9 @@ namespace VendingMachineAssignment
                         await Task.Delay(2000);
 
                         ingredient.IngredientStock -= 1;
-                        PopulateStock(ingredientsList);
-                        
                         ingredient.Changed = true;
+
+                        PopulateStock(ingredientsList);
                     }
                 }
             }
@@ -107,6 +107,9 @@ namespace VendingMachineAssignment
                 await Task.Delay(1000);
                 ButtonControl.EnableAllControls(this);
             }
+            
+            
+            // switch 
 
             if (a.PurchaseDrink($"{currentDrink}", ref balance, drinksList))
             {
