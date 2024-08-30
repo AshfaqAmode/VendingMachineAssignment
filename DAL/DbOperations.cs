@@ -125,6 +125,7 @@ namespace VendingMachineAssignment
                     var drinkName = dr.GetString(dr.GetOrdinal("DrinkName"));
                     int drinkPrice = dr.GetInt32(dr.GetOrdinal("DrinkPrice"));
                     int ingredientId = dr.GetInt32(dr.GetOrdinal("IngredientId"));
+
                      var drinkExists = (drinks.Exists(x => x.DrinkId == drinkId));
                     
                     if (!drinkExists)
@@ -135,13 +136,13 @@ namespace VendingMachineAssignment
                             drinkName,
                             drinkPrice
                         );
-                        newDrink.IngredientId.Add(ingredientId);
+                        newDrink.IngredientIds.Add(ingredientId);
                         drinks.Add(newDrink);
                     }
                     else
                     {
                         var existingDrink = drinks.First(x => x.DrinkId == drinkId);
-                        existingDrink.IngredientId.Add(ingredientId);
+                        existingDrink.IngredientIds.Add(ingredientId);
                     }
                 }
             }
@@ -154,21 +155,21 @@ namespace VendingMachineAssignment
         {
             IDbOperations conn = new DbOperations();
             var changedIngredientsList = ingredientList.Where(i => i.Changed).ToList();
-
+            string updateQuery = "";
             using (conn.GetConnection())
             {
                 foreach (Ingredients ingredient in changedIngredientsList)
                 {
-                    using (var cmd = new SqlCommand("UPDATE Ingredients SET IngredientStock = @Stock WHERE IngredientId = @Id", conn.GetConnection()))
-                    {
-                        cmd.Parameters.AddWithValue("@Stock", ingredient.IngredientStock);
-                        cmd.Parameters.AddWithValue("@Id", ingredient.IngredientId);
 
-                        cmd.ExecuteNonQuery();
-                    }
-
+                    updateQuery += $" UPDATE Ingredients SET IngredientStock = {ingredient.IngredientStock} WHERE IngredientId = {ingredient.IngredientId};";
                     ingredient.Changed = false;
                 }
+
+                using (var cmd = new SqlCommand(updateQuery, conn.GetConnection()))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
             }
         }
     }

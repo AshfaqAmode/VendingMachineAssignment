@@ -62,7 +62,7 @@
     <Compile Include="Business Logic Layer\Drinks.cs" />
     <Compile Include="Business Logic Layer\Ingredients.cs" />
     <Compile Include="DAL\DbOperations.cs" />
-    <Compile Include="DAL\DrinkOperations.cs" />
+    <Compile Include="Business Logic Layer\DrinkOperations.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

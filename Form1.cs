@@ -43,9 +43,10 @@ namespace VendingMachineAssignment
             {
                 DrinkOperations a = new DrinkOperations();
                 LogTextBox.AppendText($"> Adding Sugar..." + Environment.NewLine);
-                //a.TakeDrinkIngredients("Sugar");
-                PopulateStock(ingredientsList);
                 await Task.Delay(2000);
+                var sugar = ingredientsList.FirstOrDefault(s => s.IngredientName == "Sugar");
+                sugar.IngredientStock -= 1;
+                PopulateStock(ingredientsList);
             }
         }
 
@@ -53,7 +54,7 @@ namespace VendingMachineAssignment
         {
             IDbOperations conn = new DbOperations();
             var drink = drinkList.FirstOrDefault(d => d.DrinkName == selectedDrink);
-            var ingredientsNeeded = drink.IngredientId;
+            var ingredientsNeeded = drink.IngredientIds;
 
             if (drink != null)
             {
@@ -136,7 +137,10 @@ namespace VendingMachineAssignment
             ingredientsList = conn.GetIngredientsList(Constant.selectIngredientsQuery);
             drinksList = conn.GetFullDrinksList(Constant.selectLeftJoinDrinksIngredientsQuery);
 
+            //populate  stock boxes on open
             PopulateStock(ingredientsList);
+
+            //check stock on load
             CheckStock(ingredientsList );
             
         }
