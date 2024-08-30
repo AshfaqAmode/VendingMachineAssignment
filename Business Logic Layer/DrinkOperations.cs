@@ -11,24 +11,6 @@ namespace VendingMachineAssignment
 {
     internal class DrinkOperations
     {        
-        //checks if user can afford the drinkSelected, then removes its price from the balance
-        public bool PurchaseDrink(string drinkSelected,ref int balance, List<Drinks> drinksList)
-        {
-            bool canPurchase = false;
-            
-            int currentbalance = balance;
-
-            // Find the drink that matches the selection and is affordable
-            var drinkToPurchase = drinksList.FirstOrDefault(drink => drink.DrinkId == int.Parse(drinkSelected) && drink.DrinkPrice <= currentbalance);
-
-            if (drinkToPurchase != null)
-            {
-                // Deduct the price from the balance
-                canPurchase = true; // Purchase was successful
-            }
-
-            return canPurchase; // No matching drink or not affordable
-        }
 
         public bool HasBalance(int balance,int drinkId, List<Drinks> drinksList)
         {
@@ -74,7 +56,5 @@ namespace VendingMachineAssignment
 
             return balance;
         }
-
-        // if hasbalance hasstock oay drinl
     }
 }

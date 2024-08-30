@@ -90,13 +90,19 @@ namespace VendingMachineAssignment
             {
                 if (a.HasBalance(balance, drinkId, drinksList))
                 {
+
                     balance = a.PayDrink(drinkId, balance, drinksList);
+
+
                     string drinkName = drinksList.Where(drink => drink.DrinkId == drinkId).Select(drink => drink.DrinkName).FirstOrDefault();
+                    
                     LogTextBox.AppendText(Environment.NewLine + $"> {drinkName} selected" + Environment.NewLine);
                     await Task.Delay(500);
-                    //add assembledrink here
+                    
+                    
                     AssembleDrink(drinkId, ingredientsList, drinksList);
                     SugarChoice();
+                    
                     LogTextBox.AppendText($"> Drink Served! {Environment.NewLine}");
                     ButtonControl.EnableAllControls(this);
                 }
@@ -123,7 +129,7 @@ namespace VendingMachineAssignment
 
             var sam = new StockOperations();
 
-            if (sam.CheckStockAmount(ingredientsList) == true)
+            if (sam.CheckAllStockAmount(ingredientsList) == true)
             {
                 LogTextBox.Text = $"> URGENT... Please restock!";
                 ButtonControl.DisableAllControls(this);

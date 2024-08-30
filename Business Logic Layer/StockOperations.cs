@@ -11,18 +11,18 @@ namespace VendingMachineAssignment
 {
     interface IStockOperations
     {
-        bool CheckStockAmount(List<Ingredients> ingredientList);
+        bool CheckAllStockAmount(List<Ingredients> ingredientList);
         void RestockAll(List<Ingredients> ingredientsList);
     }
 
     internal class StockOperations : IStockOperations
     {
         //check if any stock is 0 or less
-        public bool CheckStockAmount(List<Ingredients> ingredientList)
+        public bool CheckAllStockAmount(List<Ingredients> ingredientList)
         {
             bool stockMissing = false;
 
-            if( ingredientList.Any(ingredient => ingredient.IngredientStock <= 0))
+            if( ingredientList.All(ingredient => ingredient.IngredientStock <= 0))
             {
                 stockMissing = true;
             }
