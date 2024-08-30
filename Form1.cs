@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+//using VendingMachineAssignment.Constant;
 using VendingMachineAssignment.Business_Logic_Layer;
 //using VendingMachineAssignment.Presentation_Layer;
 
@@ -22,9 +23,11 @@ namespace VendingMachineAssignment
         List<Ingredients> ingredientsList = new List<Ingredients>();
         List<Drinks> drinksList = new List<Drinks>();
 
+
         //enters loaded data values from the ingredient list into stock boxes
         public void PopulateStock(List<Ingredients> ingredientsList)
         {
+            
             IDbOperations conn = new DbOperations();
             ingredientsList = conn.GetIngredientsList(Constant.selectIngredientsQuery);
             TeaStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Tea").Select(i => i.IngredientStock).First()}";
@@ -91,6 +94,7 @@ namespace VendingMachineAssignment
                     string drinkName = drinksList.Where(drink => drink.DrinkId == drinkId).Select(drink => drink.DrinkName).FirstOrDefault();
                     LogTextBox.AppendText(Environment.NewLine + $"> {drinkName} selected" + Environment.NewLine);
                     await Task.Delay(500);
+                    //add assembledrink here
                 }
                 else
                 {
@@ -107,34 +111,6 @@ namespace VendingMachineAssignment
                 await Task.Delay(1000);
                 ButtonControl.EnableAllControls(this);
             }
-            
-            
-            // switch 
-
-            if (a.PurchaseDrink($"{currentDrink}", ref balance, drinksList))
-            {
-
-                LogTextBox.AppendText(Environment.NewLine + $"> {currentDrink} selected" + Environment.NewLine);
-                await Task.Delay(500);
-
-                MakeDrink(currentDrink, ingredientsList, drinksList);
-
-                SugarChoice();
-
-                LogTextBox.AppendText($"> Drink Served!" + Environment.NewLine);
-                LogTextBox.AppendText(Environment.NewLine + $"> Remaining Balance: {balance}" + Environment.NewLine);
-                AmountTextBox.Text = $"{balance}";
-                await Task.Delay(1000);
-                ButtonControl.EnableAllControls(this);
-            }
-            else
-            {
-                LogTextBox.AppendText($"> Insufficient balance. Add more money or make another choice{Environment.NewLine}");
-                AmountTextBox.Text = $"{balance}";
-                await Task.Delay(1000);
-                ButtonControl.EnableAllControls(this);
-            }
-
         }
 
         private void CheckStock(List<Ingredients> ingredientsList)
@@ -221,27 +197,27 @@ namespace VendingMachineAssignment
 
         private void TeaButton_Click(object sender, EventArgs e)
         {
-            DrinkSelected("Tea");
+            DrinkSelected((int)Constant.Drink.Tea);
         }
 
         private void CappucinoButton_Click(object sender, EventArgs e)
         {
-            DrinkSelected("Cappuccino");
+            DrinkSelected((int)Constant.Drink.Cappuccino);
         }
 
         private void MochaccinoButton_Click(object sender, EventArgs e)
         {
-            DrinkSelected("Mochaccino");
+            DrinkSelected((int)Constant.Drink.Mochaccino);
         }
 
         private void HotChocolateButton_Click(object sender, EventArgs e)
         {
-            DrinkSelected("Hot Chocolate");
+            DrinkSelected((int)Constant.Drink.HotChocolate);
         }
 
         private void MilkButton_Click(object sender, EventArgs e)
         {
-            DrinkSelected("Milk");
+            DrinkSelected((int)Constant.Drink.Milk);
         }
     }
 }
