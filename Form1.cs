@@ -19,11 +19,14 @@ namespace VendingMachineAssignment
     {
         private int balance;
 
+        List<Ingredients> ingredientsList = new List<Ingredients>();
+        List<Drinks> drinksList = new List<Drinks>();
+
         //enters loaded data values from the ingredient list into stock boxes
         public void PopulateStock(List<Ingredients> ingredientsList)
         {
             IDbOperations conn = new DbOperations();
-            var ingredientsList = conn.GetIngredientsList(Constant.selectIngredientsQuery);
+            ingredientsList = conn.GetIngredientsList(Constant.selectIngredientsQuery);
 
             TeaStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Tea").Select(i => i.IngredientStock)}";
             SugarStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Sugar").Select(i => i.IngredientStock)}";
@@ -39,10 +42,10 @@ namespace VendingMachineAssignment
         {
             if (!(WithoutSugarCheckBox.Checked))
             {
-                DrinkButtons a = new DrinkButtons();
+                DrinkOperations a = new DrinkOperations();
                 LogTextBox.AppendText($"> Adding Sugar..." + Environment.NewLine);
                 //a.TakeDrinkIngredients("Sugar");
-                PopulateStock();
+                PopulateStock(ingredientsList);
                 await Task.Delay(2000);
             }
         }
@@ -50,11 +53,10 @@ namespace VendingMachineAssignment
         private async void DrinkSelected(string currentDrink)
         {
             ButtonControl.DisableAllControls(this);
-            DrinkButtons a = new DrinkButtons();
+            DrinkOperations a = new DrinkOperations();
             IDbOperations conn = new DbOperations();
-            List<Drinks> drinks = conn.GetFullDrinksList(Constant.selectLeftJoinDrinksIngredientsQuery);
 
-            if (a.PurchaseDrink($"{currentDrink}", ref balance, drinks))
+            if (a.PurchaseDrink($"{currentDrink}", ref balance, drinksList))
             {
                 LogTextBox.AppendText(Environment.NewLine + $"> {currentDrink} selected" + Environment.NewLine);
                 await Task.Delay(500);
@@ -70,7 +72,7 @@ namespace VendingMachineAssignment
                             {
                                 LogTextBox.AppendText($"> Adding {drinksAndIngredients[i, j]}..." + Environment.NewLine);
                                 //a.TakeDrinkIngredients($"{drinksAndIngredients[i, j]}");
-                                PopulateStock();
+                                PopulateStock(ingredientsList);
                                 await Task.Delay(2000);
                             }
                         }
@@ -95,7 +97,6 @@ namespace VendingMachineAssignment
         }
 
 
-
         public Form1()
         {
             InitializeComponent();
@@ -107,8 +108,8 @@ namespace VendingMachineAssignment
             IDbOperations conn = new DbOperations();
             var sam = new StockOperations();
 
-            var ingredientsList = conn.GetIngredientsList(Constant.selectIngredientsQuery);
-            var drinksList = conn.GetFullDrinksList(Constant.selectLeftJoinDrinksIngredientsQuery);
+            ingredientsList = conn.GetIngredientsList(Constant.selectIngredientsQuery);
+            drinksList = conn.GetFullDrinksList(Constant.selectLeftJoinDrinksIngredientsQuery);
 
             PopulateStock(ingredientsList);
 
@@ -127,15 +128,15 @@ namespace VendingMachineAssignment
         {
             //Restock function from restock class called so 10 added to all item stock
             IStockOperations restockObj = new StockOperations();
-            restockObj.RestockAll();
-
-            //Stock boxes populated again with updated stock
-            PopulateStock();
+            restockObj.RestockAll(ingredientsList);
 
             //all buttons disabled for 3 sec while restocking
             ButtonControl.DisableAllControls(this);
             LogTextBox.Text = "> Restocking Items..." + Environment.NewLine;
             await Task.Delay(3000);
+
+            //Stock boxes populated again with updated stock
+            PopulateStock(ingredientsList);
 
             LogTextBox.AppendText("> All items restocked!" + Environment.NewLine);
             ButtonControl.EnableAllControls(this);
@@ -163,7 +164,7 @@ namespace VendingMachineAssignment
 
                     LogTextBox.AppendText($"> Balance: {balance}" + Environment.NewLine);
                     ButtonControl.EnableAllControls(this);
-                    PopulateStock();
+                    PopulateStock(ingredientsList);
                 }
 
             }

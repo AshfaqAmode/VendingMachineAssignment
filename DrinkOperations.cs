@@ -9,7 +9,7 @@ using VendingMachineAssignment.Business_Logic_Layer;
 
 namespace VendingMachineAssignment
 {
-    internal class DrinkButtons
+    internal class DrinkOperations
     {
 
         //removes one from the ingredient object's stock, then updates database.
@@ -21,7 +21,10 @@ namespace VendingMachineAssignment
             {
                 if (ingredient.IngredientName == removeIngredients)
                 {
+                    LogTextBox.AppendText($"> Adding {ingredient.IngredientName}..." + Environment.NewLine);
                     ingredient.IngredientStock -= 1;
+                    PopulateStock(ingredientsList);
+                    await Task.Delay(2000);
                     ingredient.Changed = true;
                 }
             }
@@ -31,7 +34,7 @@ namespace VendingMachineAssignment
 
         
         //checks if user can afford the drinkSelected, then removes its price from the balance
-        public bool PurchaseDrink(string drinkSelected,ref int balance, List<Drinks> drinks)
+        public bool PurchaseDrink(string drinkSelected,ref int balance, List<Drinks> drinksList)
         {
             bool canPurchase = false;
 
