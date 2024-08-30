@@ -79,11 +79,34 @@ namespace VendingMachineAssignment
         }
 
 
-        private async void DrinkSelected(string currentDrink)
+        private async void DrinkSelected(int drinkId)
         {
             ButtonControl.DisableAllControls(this);
             DrinkOperations a = new DrinkOperations();
-            IDbOperations conn = new DbOperations();
+
+            if(a.HasStock(drinkId, drinksList, ingredientsList))
+            {
+                if (a.HasBalance(balance, drinkId, drinksList))
+                {
+                    string drinkName = drinksList.Where(drink => drink.DrinkId == drinkId).Select(drink => drink.DrinkName).FirstOrDefault();
+                    LogTextBox.AppendText(Environment.NewLine + $"> {drinkName} selected" + Environment.NewLine);
+                    await Task.Delay(500);
+                }
+                else
+                {
+                    LogTextBox.AppendText($"> Insufficient balance. Add more money or make another choice{Environment.NewLine}");
+                    AmountTextBox.Text = $"{balance}";
+                    await Task.Delay(1000);
+                    ButtonControl.EnableAllControls(this);
+                }
+            }
+            else
+            {
+                LogTextBox.AppendText($"> Insufficient stock for chosen drink. Contact admin to restock or make another choice{Environment.NewLine}");
+                AmountTextBox.Text = $"{balance}";
+                await Task.Delay(1000);
+                ButtonControl.EnableAllControls(this);
+            }
 
             if (a.PurchaseDrink($"{currentDrink}", ref balance, drinksList))
             {

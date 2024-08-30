@@ -75,6 +75,6 @@ namespace VendingMachineAssignment
             return balance;
         }
 
-
+        // if hasbalance hasstock oay drinl
     }
 }
