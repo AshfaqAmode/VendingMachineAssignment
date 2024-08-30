@@ -110,6 +110,18 @@ namespace VendingMachineAssignment
 
         }
 
+        private void CheckStock(List<Ingredients> ingredientsList)
+        {
+
+            var sam = new StockOperations();
+
+            if (sam.CheckStockAmount(ingredientsList) == true)
+            {
+                LogTextBox.Text = $"> URGENT... Please restock!";
+                ButtonControl.DisableAllControls(this);
+                RestockButton.Enabled = true;
+            };
+        }
 
         public Form1()
         {
@@ -120,37 +132,33 @@ namespace VendingMachineAssignment
         private void Form1_Load(object sender, EventArgs e)
         {
             IDbOperations conn = new DbOperations();
-            var sam = new StockOperations();
 
             ingredientsList = conn.GetIngredientsList(Constant.selectIngredientsQuery);
             drinksList = conn.GetFullDrinksList(Constant.selectLeftJoinDrinksIngredientsQuery);
 
             PopulateStock(ingredientsList);
-
-            //while (sam.CheckStockAmount(ingredientsList) == false)
-            //{
-            //    LogTextBox.Text = $"> URGENT... Please restock!";
-            //    ButtonControl.DisableAllControls(this);
-            //    RestockButton.Enabled = true;
-            //};
+            CheckStock(ingredientsList );
+            
         }
 
         private async void RestockButton_Click(object sender, EventArgs e)
         {
             //Restock function from restock class called so 10 added to all item stock
             IStockOperations restockObj = new StockOperations();
-            restockObj.RestockAll(ingredientsList);
 
             //all buttons disabled for 3 sec while restocking
             ButtonControl.DisableAllControls(this);
             LogTextBox.Text = "> Restocking Items..." + Environment.NewLine;
             await Task.Delay(3000);
 
+            restockObj.RestockAll(ingredientsList);
+
             //Stock boxes populated again with updated stock
             PopulateStock(ingredientsList);
 
             LogTextBox.AppendText("> All items restocked!" + Environment.NewLine);
             ButtonControl.EnableAllControls(this);
+            CheckStock(ingredientsList);
         }
 
         private async void Amount_KeyDown(object sender, KeyEventArgs e)
