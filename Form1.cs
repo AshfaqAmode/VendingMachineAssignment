@@ -27,15 +27,12 @@ namespace VendingMachineAssignment
         //enters loaded data values from the ingredient list into stock boxes
         public void PopulateStock(List<Ingredients> ingredientsList)
         {
-            
-            IDbOperations conn = new DbOperations();
-            ingredientsList = conn.GetIngredientsList(Constant.selectIngredientsQuery);
+            AmountTextBox.Text = $"{balance}";
             TeaStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Tea").Select(i => i.IngredientStock).First()}";
             SugarStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Sugar").Select(i => i.IngredientStock).First()}";
             MilkStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Milk").Select(i => i.IngredientStock).First()}";
             ChocolateStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Chocolate").Select(i => i.IngredientStock).First()}";
             CoffeeStockTextBox.Text = $"{ingredientsList.Where(i => i.IngredientName == "Coffee").Select(i => i.IngredientStock).First()}";
-            AmountTextBox.Text = $"{balance}";
         }
 
 
@@ -47,8 +44,9 @@ namespace VendingMachineAssignment
                 DrinkOperations a = new DrinkOperations();
                 LogTextBox.AppendText($"> Adding Sugar..." + Environment.NewLine);
                 await Task.Delay(2000);
-                var sugar = ingredientsList.FirstOrDefault(s => s.IngredientName == "Sugar");
+                var sugar = ingredientsList.FirstOrDefault(s => s.IngredientId == (int)Constant.Ingredient.Sugar);
                 sugar.IngredientStock -= 1;
+                sugar.Changed = true;
                 PopulateStock(ingredientsList);
             }
         }
@@ -61,13 +59,13 @@ namespace VendingMachineAssignment
 
             if (drink != null)
             {
-                foreach (var ingredientId in ingredientsNeeded)
+                foreach (int ingredientId in ingredientsNeeded)
                 {
                     var ingredient = ingredientList.FirstOrDefault(i => i.IngredientId == ingredientId);
                     if (ingredient != null)
                     {
                         LogTextBox.AppendText($"> Adding {ingredient.IngredientName}..." + Environment.NewLine);
-                        await Task.Delay(2000);
+                        await Task.Delay(4000);
 
                         ingredient.IngredientStock -= 1;
                         ingredient.Changed = true;
@@ -76,9 +74,8 @@ namespace VendingMachineAssignment
                     }
                 }
             }
+
             conn.UpdateIngredientStockDB(ingredientList);
-
-
         }
 
 
@@ -91,10 +88,15 @@ namespace VendingMachineAssignment
             {
                 if (a.HasBalance(balance, drinkId, drinksList))
                 {
+                    balance = a.PayDrink(drinkId, balance, drinksList);
                     string drinkName = drinksList.Where(drink => drink.DrinkId == drinkId).Select(drink => drink.DrinkName).FirstOrDefault();
                     LogTextBox.AppendText(Environment.NewLine + $"> {drinkName} selected" + Environment.NewLine);
                     await Task.Delay(500);
                     //add assembledrink here
+                    AssembleDrink(drinkId, ingredientsList, drinksList);
+                    SugarChoice();
+                    LogTextBox.AppendText($"> Drink Served! {Environment.NewLine}");
+                    ButtonControl.EnableAllControls(this);
                 }
                 else
                 {
@@ -111,6 +113,7 @@ namespace VendingMachineAssignment
                 await Task.Delay(1000);
                 ButtonControl.EnableAllControls(this);
             }
+
         }
 
         private void CheckStock(List<Ingredients> ingredientsList)
