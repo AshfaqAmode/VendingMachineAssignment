@@ -77,6 +77,7 @@ namespace VendingMachineAssignment
 
         }
 
+
         private async void DrinkSelected(string currentDrink)
         {
             ButtonControl.DisableAllControls(this);
@@ -126,15 +127,12 @@ namespace VendingMachineAssignment
 
             PopulateStock(ingredientsList);
 
-            while (sam.CheckStockAmount(ingredientsList) == false)
-            {
-                LogTextBox.Text = $"> URGENT... Please restock!";
-                ButtonControl.DisableAllControls(this);
-                RestockButton.Enabled = true;
-            }
-
-
-            ;
+            //while (sam.CheckStockAmount(ingredientsList) == false)
+            //{
+            //    LogTextBox.Text = $"> URGENT... Please restock!";
+            //    ButtonControl.DisableAllControls(this);
+            //    RestockButton.Enabled = true;
+            //};
         }
 
         private async void RestockButton_Click(object sender, EventArgs e)

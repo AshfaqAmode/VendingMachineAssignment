@@ -19,24 +19,24 @@ namespace VendingMachineAssignment
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
-            IDbOperations conn = new DbOperations();
+            //IDbOperations conn = new DbOperations();
 
 
             //List<Ingredients> b = conn.GetIngredientsList(Constant.selectIngredientsQuery);
-            //print objects in drinks list
-            List<Drinks> a = new List<Drinks>();
-            a = conn.GetFullDrinksList(Constant.selectLeftJoinDrinksIngredientsQuery);
-            foreach (var drink in a)
-            {
-                string ingredientidconcat = "";
+            ////print objects in drinks list
+            //List<Drinks> a = new List<Drinks>();
+            //a = conn.GetFullDrinksList(Constant.selectLeftJoinDrinksIngredientsQuery);
+            //foreach (var drink in a)
+            //{
+            //    string ingredientidconcat = "";
 
-                foreach (int ingredientId in drink.IngredientId)
-                {
-                    ingredientidconcat = ingredientidconcat + ", " + ingredientId.ToString();
-                }
+            //    foreach (int ingredientId in drink.IngredientId)
+            //    {
+            //        ingredientidconcat = ingredientidconcat + ", " + ingredientId.ToString();
+            //    }
 
-                MessageBox.Show($"{drink.DrinkName}, {drink.DrinkId}, {drink.DrinkPrice}, {ingredientidconcat}");
-            }
+            //    MessageBox.Show($"{drink.DrinkName}, {drink.DrinkId}, {drink.DrinkPrice}, {ingredientidconcat}");
+            //}
 
             //print objects in ingredients list
             //List<Ingredients> b = conn.GetIngredientsList(Constant.selectIngredientsQuery);
