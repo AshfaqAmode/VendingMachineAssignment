@@ -61,16 +61,18 @@ namespace VendingMachineAssignment
             {
                 foreach (int ingredientId in ingredientsNeeded)
                 {
+
                     var ingredient = ingredientList.FirstOrDefault(i => i.IngredientId == ingredientId);
                     if (ingredient != null)
                     {
                         LogTextBox.AppendText($"> Adding {ingredient.IngredientName}..." + Environment.NewLine);
-                        await Task.Delay(4000);
+                        LogTextBox.Refresh();
+                        await Task.Delay(2000);
 
                         ingredient.IngredientStock -= 1;
                         ingredient.Changed = true;
-
                         PopulateStock(ingredientsList);
+
                     }
                 }
             }
