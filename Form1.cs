@@ -43,7 +43,7 @@ namespace VendingMachineAssignment
             {
                 DrinkOperations a = new DrinkOperations();
                 LogTextBox.AppendText($"> Adding Sugar..." + Environment.NewLine);
-                await Task.Delay(2000);
+                //await Task.Delay(2000);
                 var sugar = ingredientsList.FirstOrDefault(s => s.IngredientId == (int)Constant.Ingredient.Sugar);
                 sugar.IngredientStock -= 1;
                 sugar.Changed = true;
@@ -67,7 +67,7 @@ namespace VendingMachineAssignment
                     {
                         LogTextBox.AppendText($"> Adding {ingredient.IngredientName}..." + Environment.NewLine);
                         LogTextBox.Refresh();
-                        await Task.Delay(2000);
+                        //await Task.Delay(2000);
 
                         ingredient.IngredientStock -= 1;
                         ingredient.Changed = true;
@@ -98,7 +98,7 @@ namespace VendingMachineAssignment
                     string drinkName = drinksList.Where(drink => drink.DrinkId == drinkId).Select(drink => drink.DrinkName).FirstOrDefault();
                     
                     LogTextBox.AppendText(Environment.NewLine + $"> {drinkName} selected" + Environment.NewLine);
-                    await Task.Delay(500);
+                    //await Task.Delay(500);
                     
                     
                     AssembleDrink(drinkId, ingredientsList, drinksList);
@@ -111,7 +111,7 @@ namespace VendingMachineAssignment
                 {
                     LogTextBox.AppendText($"> Insufficient balance. Add more money or make another choice{Environment.NewLine}");
                     AmountTextBox.Text = $"{balance}";
-                    await Task.Delay(1000);
+                    //await Task.Delay(1000);
                     ButtonControl.EnableAllControls(this);
                 }
             }
@@ -119,7 +119,7 @@ namespace VendingMachineAssignment
             {
                 LogTextBox.AppendText($"> Insufficient stock for chosen drink. Contact admin to restock or make another choice{Environment.NewLine}");
                 AmountTextBox.Text = $"{balance}";
-                await Task.Delay(1000);
+                //await Task.Delay(1000);
                 ButtonControl.EnableAllControls(this);
             }
 
@@ -167,7 +167,7 @@ namespace VendingMachineAssignment
             //all buttons disabled for 3 sec while restocking
             ButtonControl.DisableAllControls(this);
             LogTextBox.Text = "> Restocking Items..." + Environment.NewLine;
-            await Task.Delay(3000);
+            //await Task.Delay(3000);
 
             restockObj.RestockAll(ingredientsList);
 
@@ -197,7 +197,7 @@ namespace VendingMachineAssignment
                     AmountTextBox.Clear();
                     ButtonControl.DisableAllControls(this);
                     LogTextBox.Text = "> Reading Amount..." + Environment.NewLine;
-                    await Task.Delay(2000);
+                    //await Task.Delay(2000);
 
                     LogTextBox.AppendText($"> Balance: {balance}" + Environment.NewLine);
                     ButtonControl.EnableAllControls(this);
