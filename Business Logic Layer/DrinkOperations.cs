@@ -40,6 +40,11 @@ namespace VendingMachineAssignment
                 {
                     hasStock = true;
                 }
+                else
+                {
+                    hasStock = false;
+                    return hasStock;
+                }
             }
 
             return hasStock;

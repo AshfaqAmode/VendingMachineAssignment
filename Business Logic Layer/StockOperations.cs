@@ -40,9 +40,7 @@ namespace VendingMachineAssignment
                 ingredient.IngredientStock += 10;
                 ingredient.Changed = true;
             }
-
             conn.UpdateIngredientStockDB(ingredientsList);
-
         }
     }
 }
