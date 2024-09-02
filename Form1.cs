@@ -45,16 +45,18 @@ namespace VendingMachineAssignment
                 DrinkOperations a = new DrinkOperations();
                 IDbOperations conn = new DbOperations();
                 LogTextBox.AppendText($"> Adding Sugar..." + Environment.NewLine);
-                //await Task.Delay(2000);
+                await Task.Delay(500);
                 var sugar = ingredientsList.FirstOrDefault(s => s.IngredientId == (int)Constant.Ingredient.Sugar);
                 sugar.IngredientStock -= 1;
                 sugar.Changed = true;
                 PopulateStock(ingredientsList);
                 conn.UpdateIngredientStockDB(ingredientList);
+
+                
             }
         }
 
-        public async void AssembleDrink(int drinkId, List<Ingredients> ingredientList, List<Drinks> drinkList)
+        public async void AssembleIngredients(int drinkId, List<Ingredients> ingredientList, List<Drinks> drinkList)
         {
             IDbOperations conn = new DbOperations();
             var drink = drinkList.FirstOrDefault(d => d.DrinkId == drinkId);
@@ -70,7 +72,7 @@ namespace VendingMachineAssignment
                     {
                         LogTextBox.AppendText($"> Adding {ingredient.IngredientName}..." + Environment.NewLine);
                         LogTextBox.Refresh();
-                        //await Task.Delay(2000);
+                        //await Task.Delay(500);
 
                         ingredient.IngredientStock -= 1;
                         ingredient.Changed = true;
@@ -102,10 +104,10 @@ namespace VendingMachineAssignment
                         string drinkName = drinksList.Where(drink => drink.DrinkId == drinkId).Select(drink => drink.DrinkName).FirstOrDefault();
 
                         LogTextBox.AppendText(Environment.NewLine + $"> {drinkName} selected" + Environment.NewLine);
-                        //await Task.Delay(500);
+                        await Task.Delay(500);
 
 
-                        AssembleDrink(drinkId, ingredientsList, drinksList);
+                        AssembleIngredients(drinkId, ingredientsList, drinksList);
                         SugarChoice(ingredientsList);
 
                         LogTextBox.AppendText($"> Drink Served! {Environment.NewLine}");
@@ -115,7 +117,7 @@ namespace VendingMachineAssignment
                     {
                         LogTextBox.AppendText($"> Insufficient sugar. Have your drink without sugar or contact admin to restock.{Environment.NewLine}");
                         AmountTextBox.Text = $"{balance}";
-                        //await Task.Delay(1000);
+                        await Task.Delay(1000);
                         ButtonControl.EnableAllControls(this);
                     }
 
@@ -125,7 +127,7 @@ namespace VendingMachineAssignment
                 {
                     LogTextBox.AppendText($"> Insufficient balance. Add more money or make another choice{Environment.NewLine}");
                     AmountTextBox.Text = $"{balance}";
-                    //await Task.Delay(1000);
+                    await Task.Delay(1000);
                     ButtonControl.EnableAllControls(this);
                 }
             }
@@ -133,7 +135,7 @@ namespace VendingMachineAssignment
             {
                 LogTextBox.AppendText($"> Insufficient stock for chosen drink. Contact admin to restock or make another choice{Environment.NewLine}");
                 AmountTextBox.Text = $"{balance}";
-                //await Task.Delay(1000);
+                await Task.Delay(1000);
                 ButtonControl.EnableAllControls(this);
             }
 
@@ -211,7 +213,7 @@ namespace VendingMachineAssignment
                     AmountTextBox.Clear();
                     ButtonControl.DisableAllControls(this);
                     LogTextBox.Text = "> Reading Amount..." + Environment.NewLine;
-                    //await Task.Delay(2000);
+                    await Task.Delay(2000);
 
                     LogTextBox.AppendText($"> Balance: {balance}" + Environment.NewLine);
                     ButtonControl.EnableAllControls(this);
