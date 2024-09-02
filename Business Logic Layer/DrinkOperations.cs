@@ -50,6 +50,32 @@ namespace VendingMachineAssignment
             return hasStock;
         }
 
+
+        public bool CheckSugarStock(List<Ingredients> ingredientList, CheckBox checkBox)
+        {
+            bool hasSugar = false;
+
+            if (!(checkBox.Checked))
+            {
+                if((ingredientList.Any(ingredient => ingredient.IngredientId == (int)Constant.Ingredient.Sugar && ingredient.IngredientStock > 0)))
+                {
+                    hasSugar = true;
+                    return hasSugar;
+                }
+                else
+                {
+                    hasSugar = false;
+                    return hasSugar;
+                }
+                
+            }
+            else
+            {
+                hasSugar = true;
+                return hasSugar;
+            }
+        }
+
         public int PayDrink(int drinkId, int balance, List<Drinks> drinksList)
         {
             var drinkToPurchase = drinksList.FirstOrDefault(drink => drink.DrinkId == drinkId);

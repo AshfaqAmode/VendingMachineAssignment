@@ -37,17 +37,20 @@ namespace VendingMachineAssignment
 
 
         //removes a sugar from the stock
-        private async void SugarChoice()
+        private async void SugarChoice(List<Ingredients> ingredientList)
         {
-            if (!(WithoutSugarCheckBox.Checked))
+
+            if (!(WithoutSugarCheckBox.Checked) && (ingredientList.Any(ingredient => ingredient.IngredientId == (int)Constant.Ingredient.Sugar && ingredient.IngredientStock > 0)))
             {
                 DrinkOperations a = new DrinkOperations();
+                IDbOperations conn = new DbOperations();
                 LogTextBox.AppendText($"> Adding Sugar..." + Environment.NewLine);
                 //await Task.Delay(2000);
                 var sugar = ingredientsList.FirstOrDefault(s => s.IngredientId == (int)Constant.Ingredient.Sugar);
                 sugar.IngredientStock -= 1;
                 sugar.Changed = true;
                 PopulateStock(ingredientsList);
+                conn.UpdateIngredientStockDB(ingredientList);
             }
         }
 
@@ -91,21 +94,32 @@ namespace VendingMachineAssignment
             {
                 if (a.HasBalance(balance, drinkId, drinksList))
                 {
+                    if(a.CheckSugarStock(ingredientsList, WithoutSugarCheckBox))
+                    {
+                        balance = a.PayDrink(drinkId, balance, drinksList);
 
-                    balance = a.PayDrink(drinkId, balance, drinksList);
+
+                        string drinkName = drinksList.Where(drink => drink.DrinkId == drinkId).Select(drink => drink.DrinkName).FirstOrDefault();
+
+                        LogTextBox.AppendText(Environment.NewLine + $"> {drinkName} selected" + Environment.NewLine);
+                        //await Task.Delay(500);
 
 
-                    string drinkName = drinksList.Where(drink => drink.DrinkId == drinkId).Select(drink => drink.DrinkName).FirstOrDefault();
-                    
-                    LogTextBox.AppendText(Environment.NewLine + $"> {drinkName} selected" + Environment.NewLine);
-                    //await Task.Delay(500);
-                    
-                    
-                    AssembleDrink(drinkId, ingredientsList, drinksList);
-                    SugarChoice();
-                    
-                    LogTextBox.AppendText($"> Drink Served! {Environment.NewLine}");
-                    ButtonControl.EnableAllControls(this);
+                        AssembleDrink(drinkId, ingredientsList, drinksList);
+                        SugarChoice(ingredientsList);
+
+                        LogTextBox.AppendText($"> Drink Served! {Environment.NewLine}");
+                        ButtonControl.EnableAllControls(this);
+                    }
+                    else
+                    {
+                        LogTextBox.AppendText($"> Insufficient sugar. Have your drink without sugar or contact admin to restock.{Environment.NewLine}");
+                        AmountTextBox.Text = $"{balance}";
+                        //await Task.Delay(1000);
+                        ButtonControl.EnableAllControls(this);
+                    }
+
+
                 }
                 else
                 {
@@ -155,7 +169,7 @@ namespace VendingMachineAssignment
             PopulateStock(ingredientsList);
 
             //check stock on load
-            CheckStock(ingredientsList );
+            CheckStock(ingredientsList);
             
         }
 
