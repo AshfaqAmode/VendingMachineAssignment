@@ -37,7 +37,7 @@ namespace VendingMachineAssignment
 
 
         //removes a sugar from the stock
-        private async void SugarChoice(List<Ingredients> ingredientList)
+        private async Task SugarChoice(List<Ingredients> ingredientList)
         {
 
             if (!(WithoutSugarCheckBox.Checked) && (ingredientList.Any(ingredient => ingredient.IngredientId == (int)Constant.Ingredient.Sugar && ingredient.IngredientStock > 0)))
@@ -56,7 +56,7 @@ namespace VendingMachineAssignment
             }
         }
 
-        public async void AssembleIngredients(int drinkId, List<Ingredients> ingredientList, List<Drinks> drinkList)
+        public async Task AssembleIngredients(int drinkId, List<Ingredients> ingredientList, List<Drinks> drinkList)
         {
             IDbOperations conn = new DbOperations();
             var drink = drinkList.FirstOrDefault(d => d.DrinkId == drinkId);
@@ -72,7 +72,7 @@ namespace VendingMachineAssignment
                     {
                         LogTextBox.AppendText($"> Adding {ingredient.IngredientName}..." + Environment.NewLine);
                         LogTextBox.Refresh();
-                        //await Task.Delay(500);
+                        await Task.Delay(500);
 
                         ingredient.IngredientStock -= 1;
                         ingredient.Changed = true;
@@ -107,8 +107,8 @@ namespace VendingMachineAssignment
                         await Task.Delay(500);
 
 
-                        AssembleIngredients(drinkId, ingredientsList, drinksList);
-                        SugarChoice(ingredientsList);
+                        await AssembleIngredients(drinkId, ingredientsList, drinksList);
+                        await SugarChoice(ingredientsList);
 
                         LogTextBox.AppendText($"> Drink Served! {Environment.NewLine}");
                         ButtonControl.EnableAllControls(this);
